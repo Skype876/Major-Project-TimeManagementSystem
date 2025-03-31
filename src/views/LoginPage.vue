@@ -5,7 +5,7 @@
                 <div class="flex items-center gap-2">
                     <router-link to="/" class="flex items-center gap-2 font-bold">
                         <Clock class="h-5 w-5" />
-                        <span>StudentQueue</span>
+                        <span>UTech: Student Finance Queue</span>
                     </router-link>
                 </div>
                 <div class="flex items-center gap-4">

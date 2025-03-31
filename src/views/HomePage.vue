@@ -1,9 +1,10 @@
 <template>
     <div class="flex min-h-screen flex-col">
-        <header class="sticky top-0 z-10 border-b bg-background">
+        <header class="sticky top-0 z-10 border-b bg-[#e0d63f] text-black">
             <div class="container flex h-16 items-center justify-between py-4">
+                
                 <div class="flex items-center gap-2 font-bold">
-                    <Clock class="h-5 w-5" />
+                    <img src="https://unevoc.unesco.org/fileadmin/up/utech_web.jpg" alt="UTECH" class="h-8 w-8"/>
                     <span>UTech: Student Finance Queue</span>
                 </div>
                 <nav class="hidden md:flex items-center gap-6">
@@ -32,9 +33,9 @@
                 <div class="container px-4 md:px-6">
                     <div class="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
                         <div class="flex flex-col justify-center space-y-4">
-                            <div class="space-y-2">
+                            <div class="space-y-2" style="text-align: center;">
                                 <h1 class="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                                    Student Financing Queue Management
+                                    UTech: Student Financing Queue Management System
                                 </h1>
                                 <p class="max-w-[600px] text-muted-foreground md:text-xl">
                                     Streamline your student financing experience with our real-time queue management
@@ -58,7 +59,7 @@
                             </div>
                         </div>
                         <div class="flex flex-col justify-center">
-                            <img src="" alt="Queue Management System"
+                            <img src="https://www.utech.edu.jm/about-utech/utech.jpg" alt="Queue Management System"
                                 class="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
                                 width="600" height="400" />
                         </div>
@@ -76,7 +77,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-12 md:grid-cols-3">
+                    <div class="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-12 md:grid-cols-3" style="text-align: center;">
                         <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
                             <div class="flex flex-row items-center gap-4 p-6 pb-2">
                                 <Users class="h-8 w-8 text-primary" />
@@ -121,7 +122,7 @@
         <footer class="border-t py-6 md:py-0">
             <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
                 <p class="text-center text-sm leading-loose text-muted-foreground md:text-left">
-                    © 2024 StudentQueue. All rights reserved.
+                    © 2025 StudentQueue. All rights reserved.
                 </p>
             </div>
         </footer>

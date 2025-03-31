@@ -5,7 +5,7 @@
                 <div class="flex items-center gap-2">
                     <router-link to="/" class="flex items-center gap-2 font-bold">
                         <Clock class="h-5 w-5" />
-                        <span>StudentQueue</span>
+                        <span>UTech: Student Finance Queue</span>
                     </router-link>
                 </div>
                 <div class="flex items-center gap-4">
@@ -23,7 +23,7 @@
             <div class="container max-w-screen-md py-12">
                 <div class="flex flex-col items-center justify-center space-y-4 text-center">
                     <div class="space-y-2">
-                        <h1 class="text-3xl font-bold tracking-tighter md:text-4xl">Student Portal</h1>
+                        <h1 class="text-3xl font-bold tracking-tighter md:text-4xl">UTech: Student Portal</h1>
                         <p class="text-muted-foreground md:text-xl">
                             Join the queue for student financing services and track your position in real-time.
                         </p>
