@@ -4,7 +4,7 @@
             <div class="container flex h-16 items-center justify-between py-4">
                 <div class="flex items-center gap-2 font-bold">
                     <Clock class="h-5 w-5" />
-                    <span>StudentQueue</span>
+                    <span>UTech: Student Finance Queue</span>
                 </div>
                 <nav class="hidden md:flex items-center gap-6">
                     <router-link to="/student" class="text-sm font-medium hover:underline">
