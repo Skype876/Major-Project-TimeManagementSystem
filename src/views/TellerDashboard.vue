@@ -5,7 +5,7 @@
             <div class="container flex h-16 items-center justify-between py-4">
                 <div class="flex items-center gap-2">
                     <router-link to="/" class="flex items-center gap-2 font-bold">
-                        <img src="https://unevoc.unesco.org/fileadmin/up/utech_web.jpg" alt="UTECH" class="h-8 w-8"/>
+                        <img src="https://unevoc.unesco.org/fileadmin/up/utech_web.jpg" alt="UTECH" class="h-8 w-8 ml-2"/>
                         <span>UTech: Student Finance Queue</span>
                     </router-link>
                 </div>
@@ -20,7 +20,7 @@
                     </button>
                     <div class="relative">
                         <button @click="isUserMenuOpen = !isUserMenuOpen"
-                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-black h-9 px-4 py-2 flex items-center gap-2">
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-black h-9 px-4 py-2 flex items-center gap-2 mr-2">
                             <User class="h-4 w-4" />
                             <span>Teller Name</span>
                         </button>
@@ -48,11 +48,11 @@
         <main class="flex-1">
             <div class="container py-8">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                    <div>
+                    <div class="ml-2">
                         <h1 class="text-3xl font-bold tracking-tight">Teller Dashboard</h1>
                         <p class="text-muted-foreground">Manage student queue and track your performance.</p>
                     </div>
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-4 mr-2">
                         <div class="flex items-center gap-2 bg-[#e0d63f]/20 px-3 py-1 rounded-md">
                             <div class="h-3 w-3 rounded-full bg-green-500"></div>
                             <span class="text-sm font-medium">Online</span>
@@ -117,7 +117,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-else class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        <div v-else class="rounded-lg border bg-card text-card-foreground shadow-sm ml-2">
                             <div class="flex flex-col space-y-1.5 p-6">
                                 <h3 class="text-2xl font-semibold leading-none tracking-tight">No Active Student</h3>
                                 <p class="text-sm text-muted-foreground">Call the next student in the queue to begin
@@ -131,7 +131,7 @@
                             </div>
                         </div>
 
-                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm ml-2">
                             <div class="flex flex-col space-y-1.5 p-6">
                                 <h3 class="text-2xl font-semibold leading-none tracking-tight">Queue Management</h3>
                                 <p class="text-sm text-muted-foreground">View and manage students in the queue</p>
@@ -143,7 +143,7 @@
                     </div>
 
                     <div class="space-y-6">
-                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm mr-2">
                             <div class="flex flex-col space-y-1.5 p-6">
                                 <h3 class="text-2xl font-semibold leading-none tracking-tight">Performance Dashboard
                                 </h3>
@@ -154,7 +154,7 @@
                             </div>
                         </div>
 
-                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm mr-2">
                             <div class="flex flex-col space-y-1.5 p-6">
                                 <h3 class="text-2xl font-semibold leading-none tracking-tight">Quick Stats</h3>
                                 <p class="text-sm text-muted-foreground">Today's service statistics</p>

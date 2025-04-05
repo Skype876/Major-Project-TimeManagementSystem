@@ -3,7 +3,7 @@
     <div class="flex min-h-screen flex-col">
         <header class="sticky top-0 z-10 border-b bg-[#e0d63f] text-black">
             <div class="container flex h-16 items-center justify-between py-4">
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 ml-2">
                     <router-link to="/" class="flex items-center gap-2 font-bold">
                         <img src="https://unevoc.unesco.org/fileadmin/up/utech_web.jpg" alt="UTECH" class="h-8 w-8"/>
                         <span>UTech: Student Finance Queue</span>
@@ -20,7 +20,7 @@
                     </button>
                     <div class="relative">
                         <button @click="isUserMenuOpen = !isUserMenuOpen"
-                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-black h-9 px-4 py-2 flex items-center gap-2">
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-black h-9 px-4 py-2 flex items-center gap-2 mr-2">
                             <User class="h-4 w-4" />
                             <span>Admin Name</span>
                         </button>
@@ -48,7 +48,7 @@
         <main class="flex-1">
             <div class="container py-8">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                    <div>
+                    <div class="ml-2">
                         <h1 class="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
                         <p class="text-muted-foreground">Manage tellers and view queue analytics.</p>
                     </div>
@@ -59,7 +59,7 @@
                             Export Reports
                         </button>
                         <button @click="isAddTellerOpen = true"
-                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2 flex items-center gap-2">
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2 flex items-center gap-2 mr-2">
                             <Plus class="h-4 w-4" />
                             Add Teller
                         </button>
@@ -70,7 +70,7 @@
                     <div class="flex flex-col space-y-2">
                         <div class="grid w-full grid-cols-2 md:w-[400px]">
                             <button @click="activeTab = 'tellers'" :class="[
-                                'inline-flex items-center justify-center whitespace-nowrap rounded-l-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+                                'inline-flex items-center justify-center whitespace-nowrap rounded-l-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ml-2',
                                 activeTab === 'tellers' ? 'bg-background text-foreground shadow-sm' : 'bg-muted text-muted-foreground'
                             ]">
                                 Teller Management
@@ -84,7 +84,7 @@
                         </div>
 
                         <div v-if="activeTab === 'tellers'" class="space-y-6">
-                            <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <div class="rounded-lg border bg-card text-card-foreground shadow-sm ml-2 mr-2">
                                 <div class="flex flex-col space-y-1.5 p-6">
                                     <h3 class="text-2xl font-semibold leading-none tracking-tight">Teller Management
                                     </h3>
@@ -97,7 +97,7 @@
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                                <div class="rounded-lg border bg-card text-card-foreground shadow-sm ml-2">
                                     <div class="flex flex-col space-y-1.5 p-6 pb-2">
                                         <h3 class="text-lg font-semibold leading-none tracking-tight">Total Tellers</h3>
                                     </div>
@@ -116,7 +116,7 @@
                                         <p class="text-sm text-muted-foreground">Across all tellers</p>
                                     </div>
                                 </div>
-                                <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                                <div class="rounded-lg border bg-card text-card-foreground shadow-sm mr-2">
                                     <div class="flex flex-col space-y-1.5 p-6 pb-2">
                                         <h3 class="text-lg font-semibold leading-none tracking-tight">Satisfaction Rate
                                         </h3>
