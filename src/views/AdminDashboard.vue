@@ -130,7 +130,7 @@
                         </div>
 
                         <div v-if="activeTab === 'analytics'" class="space-y-6">
-                            <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <div class="rounded-lg border bg-card text-card-foreground shadow-sm ml-2 mr-2">
                                 <div class="flex flex-col space-y-1.5 p-6">
                                     <h3 class="text-2xl font-semibold leading-none tracking-tight">Queue Analytics</h3>
                                     <p class="text-sm text-muted-foreground">View trends and statistics about the
@@ -142,7 +142,7 @@
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                                <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                                <div class="rounded-lg border bg-card text-card-foreground shadow-sm ml-2">
                                     <div class="flex flex-col space-y-1.5 p-6 pb-2">
                                         <h3 class="text-lg font-semibold leading-none tracking-tight">Today's Queue</h3>
                                     </div>
@@ -170,7 +170,7 @@
                                         <p class="text-sm text-muted-foreground">Monday & Wednesday</p>
                                     </div>
                                 </div>
-                                <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                                <div class="rounded-lg border bg-card text-card-foreground shadow-sm mr-2">
                                     <div class="flex flex-col space-y-1.5 p-6 pb-2">
                                         <h3 class="text-lg font-semibold leading-none tracking-tight">Top Issue</h3>
                                     </div>
