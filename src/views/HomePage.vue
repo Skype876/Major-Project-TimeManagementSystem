@@ -1,30 +1,30 @@
+// HomePage.vue
 <template>
     <div class="flex min-h-screen flex-col">
         <header class="sticky top-0 z-10 border-b bg-[#e0d63f] text-black">
             <div class="container flex h-16 items-center justify-between py-4">
-                
                 <div class="flex items-center gap-2 font-bold">
-                    <img src="https://unevoc.unesco.org/fileadmin/up/utech_web.jpg" alt="UTECH" class="h-8 w-8"/>
+                    <img src="https://unevoc.unesco.org/fileadmin/up/utech_web.jpg" alt="UTECH" class="h-8 w-8 ml-2"/>
                     <span>UTech: Student Finance Queue</span>
                 </div>
-                <nav class="hidden md:flex items-center gap-6">
-                    <router-link to="/student" class="text-sm font-medium hover:underline">
-                        Student Portal
-                    </router-link>
-                    <router-link to="/teller" class="text-sm font-medium hover:underline">
-                        Teller Dashboard
-                    </router-link>
-                    <router-link to="/admin" class="text-sm font-medium hover:underline">
-                        Admin Panel
-                    </router-link>
-                </nav>
-                <div class="flex items-center gap-4">
-                    <router-link to="/login">
-                        <button
-                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">
-                            Log in
-                        </button>
-                    </router-link>
+                <div class="relative">
+                    <button @click="isMenuOpen = !isMenuOpen" class="p-2 hover:bg-[#d0c72f] rounded-md">
+                        <Menu class="h-6 w-6" />
+                    </button>
+                    <!-- Dropdown menu -->
+                    <div v-if="isMenuOpen" class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white z-50">
+                        <div class="py-1">
+                            <router-link to="/student" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Student Portal
+                            </router-link>
+                            <router-link to="/teller" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Teller Dashboard
+                            </router-link>
+                            <router-link to="/admin" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Admin Panel
+                            </router-link>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
@@ -33,26 +33,26 @@
                 <div class="container px-4 md:px-6">
                     <div class="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
                         <div class="flex flex-col justify-center space-y-4">
-                            <div class="space-y-2" style="text-align: center;">
+                            <div class="space-y-2 text-center">
                                 <h1 class="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
                                     UTech: Student Financing Queue Management System
                                 </h1>
-                                <p class="max-w-[600px] text-muted-foreground md:text-xl">
+                                <p class="max-w-[600px] text-muted-foreground md:text-xl mx-auto">
                                     Streamline your student financing experience with our real-time queue management
                                     system.
                                 </p>
                             </div>
-                            <div class="flex flex-col gap-2 min-[400px]:flex-row">
-                                <router-link to="/student">
+                            <div class="flex justify-center gap-0 space-x-2">
+                                <router-link to="/student" class="w-[200px]">
                                     <button
-                                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8">
+                                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-11 px-8 w-full">
                                         Join Queue
                                         <ArrowRight class="ml-2 h-4 w-4" />
                                     </button>
                                 </router-link>
-                                <router-link to="/login">
+                                <router-link to="/login" class="w-[200px]">
                                     <button
-                                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 px-8">
+                                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 px-8 w-full">
                                         Staff Login
                                     </button>
                                 </router-link>
@@ -130,5 +130,8 @@
 </template>
 
 <script setup>
-import { Clock, ArrowRight, Users, Headset, LineChart } from 'lucide-vue-next'
+import { ref } from 'vue'
+import { Clock, ArrowRight, Users, Headset, LineChart, Menu } from 'lucide-vue-next'
+
+const isMenuOpen = ref(false)
 </script>

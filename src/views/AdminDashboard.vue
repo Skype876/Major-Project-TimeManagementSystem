@@ -1,16 +1,17 @@
+// AdminDashboard.vue
 <template>
     <div class="flex min-h-screen flex-col">
-        <header class="sticky top-0 z-10 border-b bg-background">
+        <header class="sticky top-0 z-10 border-b bg-[#e0d63f] text-black">
             <div class="container flex h-16 items-center justify-between py-4">
                 <div class="flex items-center gap-2">
                     <router-link to="/" class="flex items-center gap-2 font-bold">
-                        <Clock class="h-5 w-5" />
+                        <img src="https://unevoc.unesco.org/fileadmin/up/utech_web.jpg" alt="UTECH" class="h-8 w-8"/>
                         <span>UTech: Student Finance Queue</span>
                     </router-link>
                 </div>
                 <div class="flex items-center gap-4">
                     <button
-                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 relative">
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-black h-9 w-9 relative">
                         <Bell class="h-5 w-5" />
                         <span
                             class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
@@ -19,7 +20,7 @@
                     </button>
                     <div class="relative">
                         <button @click="isUserMenuOpen = !isUserMenuOpen"
-                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 flex items-center gap-2">
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-black h-9 px-4 py-2 flex items-center gap-2">
                             <User class="h-4 w-4" />
                             <span>Admin Name</span>
                         </button>
@@ -58,7 +59,7 @@
                             Export Reports
                         </button>
                         <button @click="isAddTellerOpen = true"
-                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 flex items-center gap-2">
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2 flex items-center gap-2">
                             <Plus class="h-4 w-4" />
                             Add Teller
                         </button>
@@ -187,7 +188,7 @@
         <footer class="border-t py-6 md:py-0">
             <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
                 <p class="text-center text-sm leading-loose text-muted-foreground md:text-left">
-                    © 2024 StudentQueue. All rights reserved.
+                    © 2025 StudentQueue. All rights reserved.
                 </p>
             </div>
         </footer>
