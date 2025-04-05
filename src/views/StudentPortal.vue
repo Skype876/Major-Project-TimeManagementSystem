@@ -5,7 +5,7 @@
             <div class="container flex h-16 items-center justify-between py-4">
                 <div class="flex items-center gap-2">
                     <router-link to="/" class="flex items-center gap-2 font-bold">
-                        <img src="https://unevoc.unesco.org/fileadmin/up/utech_web.jpg" alt="UTECH" class="h-8 w-8 ml-2"/>
+                        <img src="https://yt3.googleusercontent.com/connko1b_He_JwFuBO0YniegoXaVMsp6-CB49umTDGsObP25qTa35tJumxdWBrhVIs4E_J58_pA=s160-c-k-c0x00ffffff-no-rj" alt="UTECH" class="h-8 w-8 ml-2 rounded-full"/>
                         <span>UTech: Student Finance Queue</span>
                     </router-link>
                 </div>
