@@ -1,8 +1,8 @@
 //LoginPage.vue
 <template>
     <div class="flex min-h-screen flex-col">
-        <header class="sticky top-0 z-10 border-b bg-[#e0d63f] text-black">
-            <div class="container flex h-16 items-center justify-between py-4">
+        <header class="sticky top-0 z-10 border-b bg-blue-600 text-white">
+            <div class="container mx-auto flex h-16 items-center justify-between py-4">
                 <div class="flex items-center gap-2">
                     <router-link to="/" class="flex items-center gap-2 font-bold">
                         <img src="https://yt3.googleusercontent.com/connko1b_He_JwFuBO0YniegoXaVMsp6-CB49umTDGsObP25qTa35tJumxdWBrhVIs4E_J58_pA=s160-c-k-c0x00ffffff-no-rj" alt="UTECH" class="h-8 w-8 ml-2 rounded-full"/>
@@ -119,10 +119,10 @@
                 </div>
             </div>
         </main>
-        <footer class="border-t py-6 md:py-0">
-            <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-                <p class="text-center text-sm leading-loose text-muted-foreground md:text-left">
-                    © 2025 StudentQueue. All rights reserved.
+        <footer class="border-t py-6">
+            <div class="container mx-auto text-center">
+                <p class="text-sm leading-loose text-muted-foreground">
+                © 2025 UTechStudentQueue. All rights reserved.
                 </p>
             </div>
         </footer>

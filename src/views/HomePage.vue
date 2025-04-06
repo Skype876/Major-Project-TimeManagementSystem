@@ -1,8 +1,7 @@
-// HomePage.vue
 <template>
     <div class="flex min-h-screen flex-col">
-        <header class="sticky top-0 z-10 border-b bg-[#e0d63f] text-black">
-            <div class="container flex h-16 items-center justify-between py-4">
+        <header class="sticky top-0 z-10 border-b bg-blue-600 text-white">
+            <div class="container mx-auto flex h-16 items-center justify-between py-4">
                 <div class="flex items-center gap-2 font-bold">
                     <img src="https://yt3.googleusercontent.com/connko1b_He_JwFuBO0YniegoXaVMsp6-CB49umTDGsObP25qTa35tJumxdWBrhVIs4E_J58_pA=s160-c-k-c0x00ffffff-no-rj" alt="UTECH" class="h-8 w-8 ml-2 rounded-full"/>
                     <span>UTech: Student Finance Queue</span>
@@ -30,7 +29,7 @@
         </header>
         <main class="flex-1">
             <section class="w-full py-12 md:py-24 lg:py-32 bg-muted/40">
-                <div class="container px-4 md:px-6">
+                <div class="container mx-auto px-4 md:px-6">
                     <div class="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
                         <div class="flex flex-col justify-center space-y-4">
                             <div class="space-y-2 text-center">
@@ -59,70 +58,73 @@
                             </div>
                         </div>
                         <div class="flex flex-col justify-center">
-                            <img src="https://www.utech.edu.jm/about-utech/utech.jpg" alt="Queue Management System"
-                                class="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
-                                width="600" height="400" />
+                            <!-- Image Slideshow -->
+                            <div class="relative w-full aspect-video overflow-hidden rounded-xl shadow-lg">
+                                <transition name="fade" mode="out-in">
+                                    <img
+                                        :src="currentImage"
+                                        :key="currentImage"
+                                        alt="Slideshow Image"
+                                        class="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ease-in-out"
+                                    />
+                                </transition>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
             <section class="w-full py-12 md:py-24 lg:py-32">
-                <div class="container px-4 md:px-6">
+                <div class="container mx-auto px-4 md:px-6">
                     <div class="flex flex-col items-center justify-center space-y-4 text-center">
-                        <div class="space-y-2">
-                            <h2 class="text-3xl font-bold tracking-tighter md:text-4xl">Key Features</h2>
-                            <p
-                                class="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                                Our queue management system offers a comprehensive solution for students and staff.
-                            </p>
+                    <div class="space-y-2">
+                        <h2 class="text-3xl font-bold tracking-tighter md:text-4xl">Key Features</h2>
+                        <p class="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                        Our queue management system offers a comprehensive solution for students and staff.
+                        </p>
+                    </div>
+                    </div>
+                    <div class="mx-auto grid max-w-6xl grid-cols-1 gap-6 py-12 text-center sm:grid-cols-2 md:grid-cols-3">
+                    <!-- Card 1 -->
+                    <div
+                        class="rounded-lg border bg-white text-gray-800 shadow-md transition-transform hover:scale-105 hover:shadow-xl p-6">
+                        <div class="flex flex-col items-center gap-4">
+                        <Users class="h-10 w-10 text-blue-600" />
+                        <h3 class="text-xl font-semibold">Student Portal</h3>
+                        <p class="text-sm text-gray-600">
+                            Join the queue, track your position in real-time, receive notifications, and provide feedback after service.
+                        </p>
                         </div>
                     </div>
-                    <div class="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-12 md:grid-cols-3" style="text-align: center;">
-                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
-                            <div class="flex flex-row items-center gap-4 p-6 pb-2">
-                                <Users class="h-8 w-8 text-primary" />
-                                <h3 class="text-xl font-semibold leading-none tracking-tight">Student Portal</h3>
-                            </div>
-                            <div class="p-6 pt-0">
-                                <p class="text-sm text-muted-foreground">
-                                    Join the queue, track your position in real-time, receive notifications, and provide
-                                    feedback after
-                                    service.
-                                </p>
-                            </div>
+                    <!-- Card 2 -->
+                    <div
+                        class="rounded-lg border bg-white text-gray-800 shadow-md transition-transform hover:scale-105 hover:shadow-xl p-6">
+                        <div class="flex flex-col items-center gap-4">
+                        <Headset class="h-10 w-10 text-blue-600" />
+                        <h3 class="text-xl font-semibold">Teller Dashboard</h3>
+                        <p class="text-sm text-gray-600">
+                            Manage the queue, view student details, track performance, and efficiently serve students.
+                        </p>
                         </div>
-                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
-                            <div class="flex flex-row items-center gap-4 p-6 pb-2">
-                                <Headset class="h-8 w-8 text-primary" />
-                                <h3 class="text-xl font-semibold leading-none tracking-tight">Teller Dashboard</h3>
-                            </div>
-                            <div class="p-6 pt-0">
-                                <p class="text-sm text-muted-foreground">
-                                    Manage the queue, view student details, track performance, and efficiently serve
-                                    students.
-                                </p>
-                            </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div
+                        class="rounded-lg border bg-white text-gray-800 shadow-md transition-transform hover:scale-105 hover:shadow-xl p-6">
+                        <div class="flex flex-col items-center gap-4">
+                        <LineChart class="h-10 w-10 text-blue-600" />
+                        <h3 class="text-xl font-semibold">Admin Panel</h3>
+                        <p class="text-sm text-gray-600">
+                            Manage tellers, view comprehensive reports, analyze trends, and optimize service delivery.
+                        </p>
                         </div>
-                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
-                            <div class="flex flex-row items-center gap-4 p-6 pb-2">
-                                <LineChart class="h-8 w-8 text-primary" />
-                                <h3 class="text-xl font-semibold leading-none tracking-tight">Admin Panel</h3>
-                            </div>
-                            <div class="p-6 pt-0">
-                                <p class="text-sm text-muted-foreground">
-                                    Manage tellers, view comprehensive reports, analyze trends, and optimize service
-                                    delivery.
-                                </p>
-                            </div>
-                        </div>
+                    </div>
                     </div>
                 </div>
             </section>
         </main>
-        <footer class="border-t py-6 md:py-0">
-            <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-                <p class="text-center text-sm leading-loose text-muted-foreground md:text-left">
-                    © 2025 StudentQueue. All rights reserved.
+        <footer class="border-t py-6">
+            <div class="container mx-auto text-center">
+                <p class="text-sm leading-loose text-muted-foreground">
+                © 2025 UTechStudentQueue. All rights reserved.
                 </p>
             </div>
         </footer>
@@ -134,4 +136,29 @@ import { ref } from 'vue'
 import { Clock, ArrowRight, Users, Headset, LineChart, Menu } from 'lucide-vue-next'
 
 const isMenuOpen = ref(false)
+
+const images = [
+  "https://loopnewslive.blob.core.windows.net/liveimage/sites/default/files/2020-05/7lBJ4E2Cnr.jpg",
+  "https://i.ytimg.com/vi/Ih6hPJcYFdE/maxresdefault.jpg",
+  "https://pbs.twimg.com/media/ErzPzrgXMAkzNDw.jpg"
+]
+
+const currentImageIndex = ref(0)
+const currentImage = ref(images[currentImageIndex.value])
+
+setInterval(() => {
+  currentImageIndex.value = (currentImageIndex.value + 1) % images.length
+  currentImage.value = images[currentImageIndex.value]
+}, 4000) // rotates every 4 seconds
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

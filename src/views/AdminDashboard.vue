@@ -1,8 +1,8 @@
 // AdminDashboard.vue
 <template>
     <div class="flex min-h-screen flex-col">
-        <header class="sticky top-0 z-10 border-b bg-[#e0d63f] text-black">
-            <div class="container flex h-16 items-center justify-between py-4">
+        <header class="sticky top-0 z-10 border-b bg-blue-600 text-white">
+            <div class="container mx-auto flex h-16 items-center justify-between py-4">
                 <div class="flex items-center gap-2 ml-2">
                     <router-link to="/" class="flex items-center gap-2 font-bold">
                         <img src="https://yt3.googleusercontent.com/connko1b_He_JwFuBO0YniegoXaVMsp6-CB49umTDGsObP25qTa35tJumxdWBrhVIs4E_J58_pA=s160-c-k-c0x00ffffff-no-rj" alt="UTECH" class="h-8 w-8 rounded-full"/>
@@ -11,16 +11,16 @@
                 </div>
                 <div class="flex items-center gap-4">
                     <button
-                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-black h-9 w-9 relative">
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-white h-9 w-9 relative">
                         <Bell class="h-5 w-5" />
                         <span
-                            class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
+                            class="absolute -top-1 -right-1 inline-flex items-center justify-center h-5 w-5 text-xs font-bold text-black bg-white rounded-full border border-black">
                             2
                         </span>
                     </button>
                     <div class="relative">
                         <button @click="isUserMenuOpen = !isUserMenuOpen"
-                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-black h-9 px-4 py-2 flex items-center gap-2 mr-2">
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-white h-9 px-4 py-2 flex items-center gap-2 mr-2">
                             <User class="h-4 w-4" />
                             <span>Admin Name</span>
                         </button>
@@ -45,8 +45,8 @@
                 </div>
             </div>
         </header>
-        <main class="flex-1">
-            <div class="container py-8">
+        <main class="flex-1 pb-10 flex justify-center items-start pt-10">
+            <div class="w-full max-w-6xl px-4">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <div class="ml-2">
                         <h1 class="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
@@ -185,10 +185,10 @@
                 </div>
             </div>
         </main>
-        <footer class="border-t py-6 md:py-0">
-            <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-                <p class="text-center text-sm leading-loose text-muted-foreground md:text-left">
-                    © 2025 StudentQueue. All rights reserved.
+        <footer class="border-t py-6 ">
+            <div class="container mx-auto text-center">
+                <p class="text-sm leading-loose text-muted-foreground">
+                © 2025 UTechStudentQueue. All rights reserved.
                 </p>
             </div>
         </footer>
