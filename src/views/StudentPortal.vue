@@ -296,8 +296,9 @@ const handleJoinQueue = async () => {
             estimatedTime: data.estimatedWaitTime,
             tellerDesk: null
         };
-       
-        localStorage.setItem('session', JSON.stringify(data.session))
+
+        // Save only id and token from response
+        localStorage.setItem('session', JSON.stringify({ id: data.id, token: data.token }))
     } catch (error) {
         console.error('Error joining queue:', error);
         alert('Failed to join queue. Please try again.');
@@ -306,7 +307,8 @@ const handleJoinQueue = async () => {
 
 const handleExitQueue = async () => {
     try {
-        const response = await fetch(`http://localhost:8080/students/${document.getElementById('student-id').value}/exit`, {
+        const session = JSON.parse(localStorage.getItem('session'))
+        const response = await fetch(`http://localhost:8080/students/${session.id}/exit`, {
             method: 'PUT'
         });
 

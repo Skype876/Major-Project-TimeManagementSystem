@@ -4,11 +4,11 @@
       <div class="text-center">
         <h2 class="text-xl font-semibold">You are in the queue</h2>
         <div class="mt-4 flex justify-center">
-          <div
-            class="flex h-24 w-24 items-center justify-center rounded-full bg-primary-foreground text-4xl font-bold text-primary"
-          >
-            {{ queueData.position }}
-          </div>
+            <div
+              class="flex h-24 w-24 items-center justify-center rounded-full bg-primary-foreground text-4xl font-bold text-primary"
+            >
+              {{ queueData.position || '--' }}
+            </div>
         </div>
         <p class="mt-4 text-sm">Your position in line</p>
       </div>
@@ -21,7 +21,7 @@
         </div>
         <div class="text-center">
           <p class="text-sm font-medium text-muted-foreground">Teller Desk</p>
-          <p class="text-2xl font-bold">--</p>
+          <p class="text-2xl font-bold">{{ queueData.tellerDesk || '--' }}</p>
         </div>
       </div>
     </div>
@@ -43,32 +43,69 @@ let ws = null
 onMounted(async () => {
   let session = JSON.parse(localStorage.getItem('session'))
   console.log('session', session)
+  if (!session || !session.id || !session.token) {
+    console.error('Session id or token missing, cannot establish WebSocket connection')
+    return
+  }
   try {
-    const response = await fetch(`http://localhost:8080/session/${session.studentId}`)
-    if (!response.ok) throw new Error('Failed to fetch student id from session')
-    const data = await response.json()
-    console.log(data)
-    const studentId = data.studentId
+    // Use id and token from session for WebSocket connection
+    const { id, token } = session
 
-    ws = new WebSocket(`ws://localhost:8080/students/${studentId}/updates`)
+    ws = new WebSocket(`ws://localhost:8080/queue/updates/${id}?token=${token}`)
+
+    ws.onopen = () => {
+      console.log('WebSocket connection opened')
+    }
 
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data)
-        queueData.value = {
-          position: data.queuePosition,
-          estimatedTime: data.currentWaitTime,
+        console.log('WebSocket message received:', data)
+        if (Array.isArray(data)) {
+          // Find current student data by matching id from session inside nested student object
+          const session = JSON.parse(localStorage.getItem('session'))
+          console.log('Session id:', session.id)
+          console.log('Ids in WebSocket data:', data.map(item => item.student?.id))
+          // Try matching by student.id or student.id_num
+          let currentStudent = data.find(item => item.student?.id === session.id)
+          if (!currentStudent) {
+            currentStudent = data.find(item => item.student?.id_num === session.id)
+          }
+          if (currentStudent) {
+            const student = currentStudent.student
+queueData.value = {
+  position: currentStudent.queuePosition || currentStudent.position,
+  estimatedTime: currentStudent.estimatedWaitTime || currentStudent.currentWaitTime,
+  name: student.name,
+  idNum: student.idNum || student.id_num,
+  typeOfIssue: student.typeOfIssue,
+  tellerDesk: currentStudent.teller || null
+}
+            console.log('Updated queueData:', queueData.value)
+          } else {
+            console.warn('Current student data not found in WebSocket array')
+          }
+        } else {
+          queueData.value = {
+            position: data.position || data.queuePosition,
+            estimatedTime: data.currentWaitTime,
+            name: data.name,
+            idNum: data.idNum,
+            typeOfIssue: data.typeOfIssue,
+            tellerDesk: data.teller || null
+          }
+          console.log('Updated queueData:', queueData.value)
+        }
+
+        ws.onerror = (error) => {
+          console.error('WebSocket error:', error)
         }
       } catch (error) {
-        console.error('Error parsing WebSocket message:', error)
+        console.error('Error setting up WebSocket:', error)
       }
     }
-
-    ws.onerror = (error) => {
-      console.error('WebSocket error:', error)
-    }
   } catch (error) {
-    console.error('Error fetching student id:', error)
+    console.error('Error setting up WebSocket:', error)
   }
 })
 
