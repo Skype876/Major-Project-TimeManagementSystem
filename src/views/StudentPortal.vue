@@ -267,18 +267,85 @@ const queueData = ref({
 })
 const activeTab = ref('status')
 
-const handleJoinQueue = () => {
-    isInQueue.value = true
-    // In a real app, this would make an API call to add the student to the queue
+const handleJoinQueue = async () => {
+    try {
+        const response = await fetch('http://localhost:8080/students', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: document.getElementById('name').value,
+                id_num: document.getElementById('student-id').value,
+                collegeFaculty: document.getElementById('faculty').value,
+                studentLevel: 'undergraduate', // Assuming default level
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                typeOfIssue: document.getElementById('issue-type').value
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to join queue');
+        }
+
+        const data = await response.json();
+        isInQueue.value = true;
+        queueData.value = {
+            position: data.queuePosition,
+            estimatedTime: data.estimatedWaitTime,
+            tellerDesk: null
+        };
+       
+        localStorage.setItem('session', JSON.stringify(data.session))
+    } catch (error) {
+        console.error('Error joining queue:', error);
+        alert('Failed to join queue. Please try again.');
+    }
 }
 
-const handleExitQueue = () => {
-    isInQueue.value = false
-    // In a real app, this would make an API call to remove the student from the queue
+const handleExitQueue = async () => {
+    try {
+        const response = await fetch(`http://localhost:8080/students/${document.getElementById('student-id').value}/exit`, {
+            method: 'PUT'
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to exit queue');
+        }
+
+        isInQueue.value = false;
+    } catch (error) {
+        console.error('Error exiting queue:', error);
+        alert('Failed to exit queue. Please try again.');
+    }
 }
 
-const handleSubmitFeedback = () => {
-    isInQueue.value = false
-    // In a real app, this would make an API call to submit feedback
+const handleSubmitFeedback = async () => {
+    try {
+        const rating = document.querySelector('button[aria-pressed="true"]')?.textContent || '5';
+        const feedback = document.getElementById('feedback').value;
+
+        const response = await fetch('http://localhost:8080/feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                studentId: document.getElementById('student-id').value,
+                rating: parseInt(rating),
+                feedback: feedback
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to submit feedback');
+        }
+
+        isInQueue.value = false;
+    } catch (error) {
+        console.error('Error submitting feedback:', error);
+        alert('Failed to submit feedback. Please try again.');
+    }
 }
 </script>

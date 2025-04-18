@@ -1,4 +1,3 @@
-//TellerDashboard.vue
 <template>
     <div class="flex min-h-screen flex-col">
         <header class="sticky top-0 z-10 border-b bg-blue-600 text-white">
@@ -10,32 +9,23 @@
                     </router-link>
                 </div>
                 <div class="flex items-center gap-4">
-                    <button
-                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-black h-9 w-9 relative">
+                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-black h-9 w-9 relative">
                         <Bell class="h-5 w-5 text-white" />
-                        <span
-                            class="absolute -top-1 -right-1 inline-flex items-center justify-center h-5 w-5 text-xs font-bold text-black bg-white rounded-full border border-black">
-                            3
-                        </span>
+                        <span class="absolute -top-1 -right-1 inline-flex items-center justify-center h-5 w-5 text-xs font-bold text-black bg-white rounded-full border border-black">3</span>
                     </button>
                     <div class="relative">
-                        <button @click="isUserMenuOpen = !isUserMenuOpen"
-                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-white h-9 px-4 py-2 flex items-center gap-2 mr-2">
+                        <button @click="isUserMenuOpen = !isUserMenuOpen" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-white h-9 px-4 py-2 flex items-center gap-2 mr-2">
                             <User class="h-4 w-4" />
                             <span>Teller Name</span>
                         </button>
-                        <div v-if="isUserMenuOpen"
-                            class="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-popover text-popover-foreground z-50">
+                        <div v-if="isUserMenuOpen" class="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-popover text-popover-foreground z-50">
                             <div class="py-1 px-2 text-sm font-medium">My Account</div>
                             <div class="h-px bg-muted my-1"></div>
-                            <button
-                                class="flex w-full items-center px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm">Profile</button>
-                            <button
-                                class="flex w-full items-center px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm">Settings</button>
+                            <button class="flex w-full items-center px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm">Profile</button>
+                            <button class="flex w-full items-center px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm">Settings</button>
                             <div class="h-px bg-muted my-1"></div>
                             <router-link to="/">
-                                <button
-                                    class="flex w-full items-center px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm">
+                                <button class="flex w-full items-center px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm">
                                     <LogOut class="mr-2 h-4 w-4" />
                                     <span>Log out</span>
                                 </button>
@@ -70,62 +60,58 @@
                                 <h3 class="text-2xl font-semibold leading-none tracking-tight">Current Student</h3>
                                 <p class="text-sm text-muted-foreground">Student details and service information</p>
                             </div>
-                            <div class="p-6 space-y-6">
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="space-y-1">
-                                        <p class="text-sm font-medium text-muted-foreground">Name</p>
-                                        <p class="font-medium">{{ currentStudent.name }}</p>
-                                    </div>
-                                    <div class="space-y-1">
-                                        <p class="text-sm font-medium text-muted-foreground">Student ID</p>
-                                        <p class="font-medium">{{ currentStudent.id }}</p>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="space-y-1">
-                                        <p class="text-sm font-medium text-muted-foreground">Faculty</p>
-                                        <p>{{ currentStudent.faculty }}</p>
-                                    </div>
-                                    <div class="space-y-1">
-                                        <p class="text-sm font-medium text-muted-foreground">Issue Type</p>
-                                        <p>{{ currentStudent.issueType }}</p>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="space-y-1">
-                                        <p class="text-sm font-medium text-muted-foreground">Email</p>
-                                        <p>{{ currentStudent.email }}</p>
-                                    </div>
-                                    <div class="space-y-1">
-                                        <p class="text-sm font-medium text-muted-foreground">Phone</p>
-                                        <p>{{ currentStudent.phone }}</p>
-                                    </div>
-                                </div>
-                                <div class="space-y-1">
-                                    <p class="text-sm font-medium text-muted-foreground">Wait Time</p>
-                                    <p>{{ currentStudent.waitTime }} minutes</p>
-                                </div>
-                                <div class="flex gap-4">
-                                    <button @click="handleCompleteService"
-                                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2 flex-1">
-                                        Complete Service
-                                    </button>
-                                    <button
-                                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-[#e0d63f]/20 text-black h-10 px-4 py-2 flex-1">
-                                        Reassign
-                                    </button>
-                                </div>
-                            </div>
+      <div class="p-6 space-y-6">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <p class="text-sm font-medium text-muted-foreground">Name</p>
+            <p class="font-medium">{{ currentStudent.name }}</p>
+          </div>
+          <div class="space-y-1">
+            <p class="text-sm font-medium text-muted-foreground">Student ID</p>
+            <p class="font-medium">{{ currentStudent.id_num }}</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <p class="text-sm font-medium text-muted-foreground">Faculty</p>
+            <p>{{ currentStudent.collegeFaculty || 'Unknown' }}</p>
+          </div>
+          <div class="space-y-1">
+            <p class="text-sm font-medium text-muted-foreground">Issue Type</p>
+            <p>{{ currentStudent.typeOfIssue }}</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <p class="text-sm font-medium text-muted-foreground">Email</p>
+            <p>{{ currentStudent.email || 'N/A' }}</p>
+          </div>
+          <div class="space-y-1">
+            <p class="text-sm font-medium text-muted-foreground">Phone</p>
+            <p>{{ currentStudent.phone || 'N/A' }}</p>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <p class="text-sm font-medium text-muted-foreground">Wait Time</p>
+          <p>{{ currentStudent.estimatedWaitTime }} minutes</p>
+        </div>
+                        <div class="flex gap-4">
+                          <button @click="handleCompleteService" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2 flex-1">
+                            Complete Service
+                          </button>
+                          <button @click="handleRemoveService" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-[#e0d63f]/20 text-black h-10 px-4 py-2 flex-1">
+                            Remove from Queue
+                          </button>
+                        </div>
+      </div>
                         </div>
                         <div v-else class="rounded-lg border bg-card text-card-foreground shadow-sm ml-2">
                             <div class="flex flex-col space-y-1.5 p-6">
                                 <h3 class="text-2xl font-semibold leading-none tracking-tight">No Active Student</h3>
-                                <p class="text-sm text-muted-foreground">Call the next student in the queue to begin
-                                    service</p>
+                                <p class="text-sm text-muted-foreground">Call the next student in the queue to begin service</p>
                             </div>
                             <div class="p-6">
-                                <button @click="handleNextStudent"
-                                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2">
+                                <button @click="() => {}" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2">
                                     Call Next Student
                                 </button>
                             </div>
@@ -145,8 +131,7 @@
                     <div class="space-y-6">
                         <div class="rounded-lg border bg-card text-card-foreground shadow-sm mr-2">
                             <div class="flex flex-col space-y-1.5 p-6">
-                                <h3 class="text-2xl font-semibold leading-none tracking-tight">Performance Dashboard
-                                </h3>
+                                <h3 class="text-2xl font-semibold leading-none tracking-tight">Performance Dashboard</h3>
                                 <p class="text-sm text-muted-foreground">Your service performance metrics</p>
                             </div>
                             <div class="p-6">
@@ -188,38 +173,79 @@
         </main>
         <footer class="border-t py-6">
             <div class="container mx-auto text-center">
-                <p class="text-sm leading-loose text-muted-foreground">
-                © 2025 UTechStudentQueue. All rights reserved.
-                </p>
+                <p class="text-sm leading-loose text-muted-foreground">© 2025 UTechStudentQueue. All rights reserved.</p>
             </div>
         </footer>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { Clock, Bell, User, LogOut } from 'lucide-vue-next'
-import TellerQueueTable from '@/views/TellerQueueTable.vue'
-import TellerPerformance from '@/views/TellerPerformance.vue'
+import { ref, reactive, onMounted } from 'vue'
+import { useEventBus } from '@vueuse/core'
+import { Bell, User, LogOut } from 'lucide-vue-next'
+import TellerQueueTable from './TellerQueueTable.vue'
+import TellerPerformance from './TellerPerformance.vue'
 
 const isUserMenuOpen = ref(false)
-const currentStudent = ref(null)
+const currentStudent = reactive({})
 
-const handleNextStudent = () => {
-    // In a real app, this would make an API call to get the next student
-    currentStudent.value = {
-        name: "Jane Smith",
-        id: "S87654321",
-        faculty: "Business",
-        issueType: "Scholarship",
-        email: "jane.smith@example.com",
-        phone: "+1 (555) 987-6543",
-        waitTime: 18,
+const { on: onEvent } = useEventBus('call-student')
+
+onEvent((studentData) => {
+  console.log('Received student data:', studentData) // Log received data for debugging
+  console.log('Raw studentData:', studentData) // Additional log to inspect full data
+  currentStudent.studentId = studentData.id
+  currentStudent.name = studentData.name
+  currentStudent.id_num = studentData.id_num
+  currentStudent.collegeFaculty = studentData.collegeFaculty
+  currentStudent.typeOfIssue = studentData.typeOfIssue
+  currentStudent.email = studentData.email || 'N/A'
+  currentStudent.phone = studentData.phone || 'N/A'
+  currentStudent.estimatedWaitTime = studentData.estimatedWaitTime
+  console.log('Updated currentStudent:', JSON.stringify(currentStudent)) // Log updated currentStudent for debugging
+})
+
+const handleCompleteService = async () => {
+  console.log('handleCompleteService called')
+  try {
+    if (!currentStudent.studentId) {
+      console.warn('No studentId in currentStudent')
+      return
     }
+    const response = await fetch(`http://localhost:8080/students/${currentStudent.studentId}/complete`, {
+      method: 'PUT',
+    })
+    if (!response.ok) throw new Error('Failed to complete student service')
+    // Clear current student data
+    for (const key in currentStudent) {
+      if (Object.prototype.hasOwnProperty.call(currentStudent, key)) {
+        delete currentStudent[key]
+      }
+    }
+  } catch (error) {
+    console.error('Error completing service:', error)
+  }
 }
 
-const handleCompleteService = () => {
-    currentStudent.value = null
-    // In a real app, this would make an API call to mark the service as completed
+const handleRemoveService = async () => {
+  console.log('handleRemoveService called')
+  try {
+    if (!currentStudent.studentId) {
+      console.warn('No studentId in currentStudent')
+      return
+    }
+    const response = await fetch(`http://localhost:8080/students/${currentStudent.studentId}/remove`, {
+      method: 'PUT',
+    })
+    if (!response.ok) throw new Error('Failed to remove student from queue')
+    // Clear current student data
+    for (const key in currentStudent) {
+      if (Object.prototype.hasOwnProperty.call(currentStudent, key)) {
+        delete currentStudent[key]
+      }
+    }
+  } catch (error) {
+    console.error('Error removing student:', error)
+  }
 }
 </script>

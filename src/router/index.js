@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomePage from '@/views/HomePage.vue'
-import StudentPortal from '@/views/StudentPortal.vue'
-import LoginPage from '@/views/LoginPage.vue'
-import TellerDashboard from '@/views/TellerDashboard.vue'
-import AdminDashboard from '@/views/AdminDashboard.vue'
+import HomePage from '../views/HomePage.vue'
+import StudentPortal from '../views/StudentPortal.vue'
+import LoginPage from '../views/LoginPage.vue'
+import TellerDashboard from '../views/TellerDashboard.vue'
+import AdminDashboard from '../views/AdminDashboard.vue'
 
 const routes = [
   {

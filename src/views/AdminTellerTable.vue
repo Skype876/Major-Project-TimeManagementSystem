@@ -36,26 +36,32 @@
                         <td class="p-4 align-middle">{{ teller.avgServiceTime }}</td>
                         <td class="p-4 align-middle">{{ teller.rating }}</td>
                         <td class="p-4 align-middle">
-                            <div class="relative">
-                                <button @click="toggleMenu(teller.id)"
-                                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9">
-                                    <MoreHorizontal class="h-4 w-4" />
-                                    <span class="sr-only">Open menu</span>
+                            <div class="flex gap-2">
+                                <button @click="callTeller(teller)"
+                                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-9 px-3">
+                                    Call
                                 </button>
-                                <div v-if="activeMenu === teller.id"
-                                    class="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-popover text-popover-foreground z-50">
-                                    <div class="py-1 px-2 text-sm font-medium">Actions</div>
-                                    <div class="h-px bg-muted my-1"></div>
-                                    <button
-                                        class="flex w-full items-center px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm">
-                                        <Pencil class="mr-2 h-4 w-4" />
-                                        <span>Edit</span>
+                                <div class="relative">
+                                    <button @click="toggleMenu(teller.id)"
+                                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9">
+                                        <MoreHorizontal class="h-4 w-4" />
+                                        <span class="sr-only">Open menu</span>
                                     </button>
-                                    <button
-                                        class="flex w-full items-center px-2 py-2 text-sm text-destructive hover:bg-accent hover:text-destructive rounded-sm">
-                                        <Trash class="mr-2 h-4 w-4" />
-                                        <span>Delete</span>
-                                    </button>
+                                    <div v-if="activeMenu === teller.id"
+                                        class="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-popover text-popover-foreground z-50">
+                                        <div class="py-1 px-2 text-sm font-medium">Actions</div>
+                                        <div class="h-px bg-muted my-1"></div>
+                                        <button
+                                            class="flex w-full items-center px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm">
+                                            <Pencil class="mr-2 h-4 w-4" />
+                                            <span>Edit</span>
+                                        </button>
+                                        <button
+                                            class="flex w-full items-center px-2 py-2 text-sm text-destructive hover:bg-accent hover:text-destructive rounded-sm">
+                                            <Trash class="mr-2 h-4 w-4" />
+                                            <span>Delete</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -78,6 +84,13 @@ const toggleMenu = (id) => {
     } else {
         activeMenu.value = id
     }
+}
+
+const callTeller = (teller) => {
+    // In a real app, this would make an API call to assign the teller
+    console.log(`Calling teller ${teller.name}`)
+    // Emit event to parent or use state management to pass to TellerDashboard
+    // For now we'll just log it
 }
 
 const tellerData = ref([
