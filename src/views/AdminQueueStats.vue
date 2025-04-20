@@ -26,6 +26,9 @@
               class="h-12 px-4 text-left align-middle font-medium text-muted-foreground w-[80px]"
             ></th>
           </tr>
+          <tr>
+            
+          </tr>
         </thead>
         <tbody class="[&_tr:last-child]:border-0">
           <tr
@@ -89,10 +92,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { MoreHorizontal, Pencil, Trash } from 'lucide-vue-next'
 
 const activeMenu = ref(null)
+const tellerData = ref([])
 
 const toggleMenu = (id) => {
   if (activeMenu.value === id) {
@@ -102,56 +106,25 @@ const toggleMenu = (id) => {
   }
 }
 
-const tellerData = ref([
-  {
-    id: 'T001',
-    name: 'Sarah Johnson',
-    email: 'sarah.j@example.com',
-    desk: 1,
-    status: 'Active',
-    studentsServed: 342,
-    avgServiceTime: '7.2 min',
-    rating: '4.8/5',
-  },
-  {
-    id: 'T002',
-    name: 'Michael Chen',
-    email: 'michael.c@example.com',
-    desk: 2,
-    status: 'Active',
-    studentsServed: 289,
-    avgServiceTime: '8.5 min',
-    rating: '4.6/5',
-  },
-  {
-    id: 'T003',
-    name: 'Emily Rodriguez',
-    email: 'emily.r@example.com',
-    desk: 3,
-    status: 'Inactive',
-    studentsServed: 156,
-    avgServiceTime: '6.8 min',
-    rating: '4.9/5',
-  },
-  {
-    id: 'T004',
-    name: 'David Kim',
-    email: 'david.k@example.com',
-    desk: 4,
-    status: 'Inactive',
-    studentsServed: 201,
-    avgServiceTime: '7.5 min',
-    rating: '4.7/5',
-  },
-  {
-    id: 'T005',
-    name: 'Jessica Patel',
-    email: 'jessica.p@example.com',
-    desk: 5,
-    status: 'Active',
-    studentsServed: 178,
-    avgServiceTime: '6.9 min',
-    rating: '4.5/5',
-  },
-])
+onMounted(async () => {
+  try {
+    const response = await fetch('http://localhost:8080/users/service-reps')
+    if (!response.ok) {
+      throw new Error('Failed to fetch service reps')
+    }
+    const data = await response.json()
+    tellerData.value = data.serviceReps.map(rep => ({
+      id: rep.id,
+      name: rep.name,
+      email: rep.email,
+      desk: '', // No desk info in response
+      status: rep.status,
+      studentsServed: rep.studentsServed,
+      avgServiceTime: rep.averageWaitTimeMinutes ? `${rep.averageWaitTimeMinutes} min` : '',
+      rating: '' // No rating info in response
+    }))
+  } catch (error) {
+    console.error('Error fetching service reps:', error)
+  }
+})
 </script>
