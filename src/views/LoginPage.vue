@@ -61,60 +61,59 @@
                                     </div>
 
                                     <div v-if="activeTab === 'teller'" class="space-y-4 mt-4">
-                                        <form class="space-y-4">
+                                        <form class="space-y-4" @submit.prevent="login('teller')">
                                             <div class="space-y-2">
                                                 <label for="teller-email"
                                                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Email</label>
-                                                <input id="teller-email" type="email" placeholder="teller@example.com" required
+                                                <input id="teller-email" v-model="tellerEmail" type="email" placeholder="teller@example.com" required
                                                     class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
                                             </div>
                                             <div class="space-y-2">
                                                 <label for="teller-password"
                                                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Password</label>
-                                                <input id="teller-password" type="password" required
+                                                <input id="teller-password" v-model="tellerPassword" type="password" required
                                                     class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
                                             </div>
-                                            <router-link to="/teller" class="w-full">
-                                                <button
-                                                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2 w-full">
-                                                    Login as Teller
-                                                </button>
-                                            </router-link>
+                                            <button
+                                                type="submit"
+                                                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2 w-full">
+                                                Login as Teller
+                                            </button>
                                         </form>
                                     </div>
 
                                     <div v-if="activeTab === 'admin'" class="space-y-4 mt-4">
-                                        <form class="space-y-4">
+                                        <form class="space-y-4" @submit.prevent="login('admin')">
                                             <div class="space-y-2">
                                                 <label for="admin-email"
                                                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Email</label>
-                                                <input id="admin-email" type="email" placeholder="admin@example.com" required
+                                                <input id="admin-email" v-model="adminEmail" type="email" placeholder="admin@example.com" required
                                                     class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
                                             </div>
                                             <div class="space-y-2">
                                                 <label for="admin-password"
                                                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Password</label>
-                                                <input id="admin-password" type="password" required
+                                                <input id="admin-password" v-model="adminPassword" type="password" required
                                                     class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
                                             </div>
-                                            <router-link to="/admin" class="w-full">
-                                                <button
-                                                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2 w-full">
-                                                    Login as Admin
-                                                </button>
-                                            </router-link>
+                                            <button
+                                                type="submit"
+                                                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2 w-full">
+                                                Login as Admin
+                                            </button>
                                         </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="flex flex-col space-y-4 p-6 pt-0">
-                            <div class="text-sm text-muted-foreground text-center">
-                                <a href="#" class="underline underline-offset-4 hover:text-primary">
-                                    Forgot your password?
-                                </a>
-                            </div>
-                        </div>
+<div class="flex flex-col space-y-4 p-6 pt-0">
+    <div class="text-sm text-muted-foreground text-center">
+        <p v-if="errorMessage" class="text-red-600 mb-2">{{ errorMessage }}</p>
+        <a href="#" class="underline underline-offset-4 hover:text-primary">
+            Forgot your password?
+        </a>
+    </div>
+</div>
                     </div>
                 </div>
             </div>
@@ -131,7 +130,61 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { Clock, ArrowLeft } from 'lucide-vue-next'
 
 const activeTab = ref('teller')
+const router = useRouter()
+
+// Reactive form data
+const tellerEmail = ref('')
+const tellerPassword = ref('')
+const adminEmail = ref('')
+const adminPassword = ref('')
+
+const errorMessage = ref('')
+
+
+
+async function login(role) {
+  errorMessage.value = ''
+  let email = ''
+  let password = ''
+  if (role === 'teller') {
+    email = tellerEmail.value
+    password = tellerPassword.value
+  } else if (role === 'admin') {
+    email = adminEmail.value
+    password = adminPassword.value
+  }
+
+    try {
+      const response = await fetch('http://localhost:8080/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      errorMessage.value = errorData.message || 'Login failed'
+      return
+    }
+
+    const data = await response.json()
+    // Store token in localStorage
+    localStorage.setItem('token', data.token)
+    localStorage.setItem('email', data.email)
+    // Redirect based on role
+    if (role === 'teller') {
+      router.push('/teller')
+    } else if (role === 'admin') {
+      router.push('/admin')
+    }
+  } catch (error) {
+    errorMessage.value = 'An error occurred during login'
+  }
+}
 </script>
