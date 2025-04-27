@@ -60,67 +60,75 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import { useEventBus } from '@vueuse/core'
+import { ref, onMounted, onUnmounted} from 'vue'
+import { api } from '@/services/api'
 
+const emit = defineEmits('student-info')
+// Reactive state
 const queueData = ref([])
 const socket = ref(null)
-const selectedStudent = ref(null) // reactive variable to store fetched student info
-const eventBus = useEventBus('call-student')
+const selectedStudent = ref(null)
 
-onMounted(() => {
-  // Connect to WebSocket when component mounts
-  socket.value = new WebSocket('ws://localhost:8080/queue/updates')
+// Constants
+const WEBSOCKET_URL = 'ws://localhost:8080/queue/updates'
+const STUDENT_ENDPOINT = '/students/byID'
+const STUDENT_STATUS_ENDPOINT = '/students'
+
+// Helper function to transform queue data
+const transformQueueData = (data) => {
+  return data.map(item => ({
+    // Spread all student properties
+    ...item.student,
+    // Spread additional queue-related properties
+    estimatedWaitTime: item.estimatedWaitTime,
+    queuePosition: item.queuePosition,
+    timestamp: item.timestamp || Date.now(), // Fallback to current time if missing
+    eventType: item.event // Keep the original event type if needed
+  }))
+}
+
+// WebSocket handlers
+const setupWebSocket = () => {
+  socket.value = new WebSocket(WEBSOCKET_URL)
 
   socket.value.onopen = () => {
     console.log('Connected to queue WebSocket')
   }
 
   socket.value.onmessage = (event) => {
-    const data = JSON.parse(event.data)
-    // Flatten the student info and merge with queuePosition and estimatedWaitTime
-    queueData.value = data.map(item => ({
-      id: item.student.id,
-      name: item.student.name,
-      id_num: item.student.id_num,
-      collegeFaculty: item.student.collegeFaculty,
-      studentLevel: item.student.studentLevel,
-      phone: item.student.phone,
-      email: item.student.email,
-      typeOfIssue: item.student.typeOfIssue,
-      ticketNumber: item.student.ticketNumber,
-      status: item.student.status,
-      arrivalTime: item.student.arrivalTime,
-      currentWaitTime: item.student.currentWaitTime,
-      estimatedWaitTime: item.estimatedWaitTime,
-      queuePosition: item.queuePosition,
-      timestamp: item.timestamp
-    }))
+    try {
+      const data = JSON.parse(event.data)
+      // Handle both single object and array cases
+      const processedData = Array.isArray(data) ? data : [data]
+      queueData.value = transformQueueData(processedData)
+    } catch (error) {
+      console.error('Error parsing WebSocket message:', error)
+    }
   }
-
-
 
   socket.value.onerror = (error) => {
     console.error('WebSocket error:', error)
   }
-})
+}
 
+// Student actions
 const callStudent = async (studentId) => {
   try {
-    // Fetch student info from the new endpoint
-    const response = await fetch(`http://127.0.0.1:8080/students/byID/${studentId}`)
-    if (!response.ok) throw new Error('Failed to fetch student info')
-    const studentInfo = await response.json()
-    selectedStudent.value = studentInfo // store fetched info
+    // Fetch student info
+    const [studentResponse, statusResponse] = await Promise.all([
+      api.get(`${STUDENT_ENDPOINT}/${studentId}`),
+      api.put(`${STUDENT_STATUS_ENDPOINT}/${studentId}/in-progress`)
+    ])
 
-    // Existing POST request to mark student as in-progress
-    const postResponse = await fetch(`http://localhost:8080/students/${studentId}/in-progress`, {
-      method: 'PUT',
-    })
-    if (!postResponse.ok) throw new Error('Failed to call student')
+    if (studentResponse.status != 200 || statusResponse.status != 200) {
+      throw new Error(studentResponse.ok ? 'Failed to update status' : 'Failed to fetch student')
+    }
 
-    // Emit event with student data (can be adjusted as needed)
-    eventBus.emit({
+    const studentInfo = await studentResponse.data
+    selectedStudent.value = studentInfo
+
+    // Emit event with normalized data
+    emit('student-info',{
       id: studentInfo.id,
       name: studentInfo.name,
       id_num: studentInfo.id_num,
@@ -131,14 +139,20 @@ const callStudent = async (studentId) => {
       estimatedWaitTime: studentInfo.estimatedWaitTime,
     })
 
-    console.log(`Called student ${studentId}`)
+    console.log(`Successfully called student ${studentId}`)
   } catch (error) {
-    console.error('Error calling student:', error)
+    console.error('Error calling student:', error.message)
+    // Consider adding user feedback here (e.g., toast notification)
   }
 }
 
+// Lifecycle hooks
+onMounted(() => {
+  setupWebSocket()
+})
+
 onUnmounted(() => {
-  if (socket.value) {
+  if (socket.value && socket.value.readyState === WebSocket.OPEN) {
     socket.value.close()
   }
 })

@@ -94,6 +94,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { MoreHorizontal, Pencil, Trash } from 'lucide-vue-next'
+import { api } from '@/services/api'
 
 const activeMenu = ref(null)
 const tellerData = ref([])
@@ -108,11 +109,11 @@ const toggleMenu = (id) => {
 
 onMounted(async () => {
   try {
-    const response = await fetch('http://localhost:8080/users/service-reps')
-    if (!response.ok) {
+    const response = await api.get('/users/service-reps')
+    if (response.status != 200) {
       throw new Error('Failed to fetch service reps')
     }
-    const data = await response.json()
+    const data = await response.data
     tellerData.value = data.serviceReps.map(rep => ({
       id: rep.id,
       name: rep.name,

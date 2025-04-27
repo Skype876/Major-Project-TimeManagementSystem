@@ -7,17 +7,14 @@
           <router-link to="/" class="flex items-center gap-2 font-bold">
             <img
               src="https://yt3.googleusercontent.com/connko1b_He_JwFuBO0YniegoXaVMsp6-CB49umTDGsObP25qTa35tJumxdWBrhVIs4E_J58_pA=s160-c-k-c0x00ffffff-no-rj"
-              alt="UTECH"
-              class="h-8 w-8 ml-2 rounded-full"
-            />
+              alt="UTECH" class="h-8 w-8 ml-2 rounded-full" />
             <span>UTech: Student Finance Queue</span>
           </router-link>
         </div>
         <div class="flex items-center gap-4">
           <router-link to="/">
             <button
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] h-9 px-4 py-2 mr-2"
-            >
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] h-9 px-4 py-2 mr-2">
               <ArrowLeft class="mr-2 h-4 w-4" />
               Back to Home
             </button>
@@ -34,10 +31,7 @@
           </p>
         </div>
 
-        <div
-          v-if="!isInQueue"
-          class="rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-md"
-        >
+        <div v-if="!isInQueue" class="rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-md">
           <div class="flex flex-col space-y-1.5 p-6">
             <h3 class="text-2xl font-semibold leading-none tracking-tight">Join the Queue</h3>
             <p class="text-sm text-muted-foreground">
@@ -48,44 +42,26 @@
             <form @submit.prevent="handleJoinQueue" class="space-y-4">
               <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div class="space-y-2">
-                  <label
-                    for="name"
-                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >Full Name</label
-                  >
-                  <input
-                    id="name"
-                    placeholder="John Doe"
-                    required
-                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  />
+                  <label for="name"
+                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Full
+                    Name</label>
+                  <input id="name" placeholder="John Doe" required
+                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
                 </div>
                 <div class="space-y-2">
-                  <label
-                    for="student-id"
-                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >Student ID</label
-                  >
-                  <input
-                    id="student-id"
-                    placeholder="S12345678"
-                    required
-                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  />
+                  <label for="student-id"
+                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Student
+                    ID</label>
+                  <input id="student-id" placeholder="S12345678" required
+                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
                 </div>
               </div>
               <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div class="space-y-2">
-                  <label
-                    for="faculty"
-                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >Faculty</label
-                  >
-                  <select
-                    id="faculty"
-                    required
-                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
+                  <label for="faculty"
+                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Faculty</label>
+                  <select id="faculty" required
+                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                     <option value="" disabled selected>Select Faculty</option>
                     <option value="arts">Arts & Humanities</option>
                     <option value="business">Business</option>
@@ -95,16 +71,11 @@
                   </select>
                 </div>
                 <div class="space-y-2">
-                  <label
-                    for="issue-type"
-                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >Issue Type</label
-                  >
-                  <select
-                    id="issue-type"
-                    required
-                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
+                  <label for="issue-type"
+                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Issue
+                    Type</label>
+                  <select id="issue-type" required
+                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                     <option value="" disabled selected>Select Issue</option>
                     <option value="financial-aid">Financial Aid</option>
                     <option value="tuition">Tuition Payment</option>
@@ -115,46 +86,29 @@
                 </div>
               </div>
               <div class="space-y-2">
-                <label
-                  for="email"
-                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >Email Address</label
-                >
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="john.doe@example.com"
-                  required
-                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                />
+                <label for="email"
+                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Email
+                  Address</label>
+                <input id="email" type="email" placeholder="john.doe@example.com" required
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
               </div>
               <div class="space-y-2">
-                <label
-                  for="phone"
-                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >Phone Number (for notifications)</label
-                >
-                <input
-                  id="phone"
-                  type="tel"
-                  placeholder="+1 (555) 123-4567"
-                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                />
+                <label for="phone"
+                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Phone
+                  Number (for notifications)</label>
+                <input id="phone" type="tel" placeholder="+1 (555) 123-4567"
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
               </div>
-              <button
-                type="submit"
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2 w-full"
-              >
+              <button type="submit"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2 w-full">
                 Join Queue
               </button>
             </form>
           </div>
         </div>
 
-        <div
-          v-else-if="queueData.tellerDesk"
-          class="rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-md"
-        >
+        <div v-else-if="queueData.tellerDesk"
+          class="rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-md">
           <div class="flex flex-col space-y-1.5 p-6">
             <h3 class="text-2xl font-semibold leading-none tracking-tight">Service Completed</h3>
             <p class="text-sm text-muted-foreground">
@@ -164,40 +118,27 @@
           <div class="p-6">
             <form @submit.prevent="handleSubmitFeedback" class="space-y-4">
               <div class="space-y-2">
-                <label
-                  for="rating"
-                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >Rating</label
-                >
+                <label for="rating"
+                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Rating</label>
                 <div class="flex justify-center py-4">
                   <div class="flex gap-2">
-                    <button
-                      v-for="star in 5"
-                      :key="star"
-                      type="button"
-                      class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10 rounded-full"
-                    >
+                    <button v-for="star in 5" :key="star" type="button"
+                      class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10 rounded-full">
                       {{ star }}
                     </button>
                   </div>
                 </div>
               </div>
               <div class="space-y-2">
-                <label
-                  for="feedback"
-                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >Additional Feedback (Optional)</label
-                >
-                <textarea
-                  id="feedback"
+                <label for="feedback"
+                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Additional
+                  Feedback (Optional)</label>
+                <textarea id="feedback"
                   class="w-full min-h-[100px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  placeholder="Share your thoughts about our service..."
-                ></textarea>
+                  placeholder="Share your thoughts about our service..."></textarea>
               </div>
-              <button
-                type="submit"
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2 w-full"
-              >
+              <button type="submit"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2 w-full">
                 Submit Feedback
               </button>
             </form>
@@ -205,31 +146,25 @@
         </div>
 
         <div v-else class="space-y-6 w-full max-w-md">
-          <QueueStatus :position="queueData.position" :estimatedTime="queueData.estimatedTime" />
+          <QueueStatus :position="queueData.position" :estimatedTime="minutes" :tellerDesk="queueData.tellerDesk" />
 
           <div class="w-full">
             <div class="flex flex-col space-y-2">
               <div class="grid w-full grid-cols-2">
-                <button
-                  @click="activeTab = 'status'"
-                  :class="[
-                    'inline-flex items-center justify-center whitespace-nowrap rounded-l-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
-                    activeTab === 'status'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'bg-muted text-muted-foreground',
-                  ]"
-                >
+                <button @click="activeTab = 'status'" :class="[
+                  'inline-flex items-center justify-center whitespace-nowrap rounded-l-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+                  activeTab === 'status'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'bg-muted text-muted-foreground',
+                ]">
                   Queue Status
                 </button>
-                <button
-                  @click="activeTab = 'info'"
-                  :class="[
-                    'inline-flex items-center justify-center whitespace-nowrap rounded-r-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
-                    activeTab === 'info'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'bg-muted text-muted-foreground',
-                  ]"
-                >
+                <button @click="activeTab = 'info'" :class="[
+                  'inline-flex items-center justify-center whitespace-nowrap rounded-r-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+                  activeTab === 'info'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'bg-muted text-muted-foreground',
+                ]">
                   Your Information
                 </button>
               </div>
@@ -252,7 +187,7 @@
                       </div>
                       <div class="space-y-2">
                         <p class="text-sm font-medium text-muted-foreground">Estimated Wait Time</p>
-                        <p class="text-2xl font-bold">{{ queueData.estimatedTime }} minutes</p>
+                        <p class="text-2xl font-bold">{{ minutes }} minutes</p>
                       </div>
                     </div>
                     <div class="space-y-2">
@@ -268,10 +203,8 @@
                     </div>
                   </div>
                   <div class="flex items-center p-6 pt-0">
-                    <button
-                      @click="handleExitQueue"
-                      class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-10 px-4 py-2 w-full"
-                    >
+                    <button @click="handleExitQueue"
+                      class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-10 px-4 py-2 w-full">
                       Exit Queue
                     </button>
                   </div>
@@ -333,9 +266,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import { Clock, ArrowLeft } from 'lucide-vue-next'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ArrowLeft } from 'lucide-vue-next'
 import QueueStatus from '@/views/QueueStatus.vue'
+import { api, authApi } from '@/services/api'
 
 const isInQueue = ref(false)
 const queueData = ref({
@@ -351,6 +285,9 @@ const queueData = ref({
 })
 const activeTab = ref('status')
 
+const minutes = computed(() => {
+  return Math.floor(queueData.value.estimatedTime / 60000)
+})
 let ws = null
 
 onMounted(() => {
@@ -359,66 +296,40 @@ onMounted(() => {
   // Set isInQueue to true if session exists to show queue status on reload
   if (session && session.id && session.token) {
     isInQueue.value = true
-  } else {
-    console.error('Session id or token missing, cannot establish WebSocket connection')
-    return
-  }
-  try {
-    const { id, token } = session
-    ws = new WebSocket(`ws://localhost:8080/queue/updates/${id}?token=${token}`)
+    try {
+      const { id, token } = session
+      ws = new WebSocket(`ws://localhost:8080/queue/updates/${id}?token=${token}`)
 
-    ws.onopen = () => {
-      console.log('WebSocket connection opened')
-    }
-
-    ws.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data)
-        if (Array.isArray(data)) {
-          const session = JSON.parse(localStorage.getItem('session'))
-          let currentStudent = data.find((item) => item.student?.id === session.id)
-          if (!currentStudent) {
-            currentStudent = data.find((item) => item.student?.id_num === session.id)
-          }
-          if (currentStudent) {
-            const student = currentStudent.student
-            queueData.value = {
-              position: currentStudent.queuePosition || currentStudent.position,
-              estimatedTime: currentStudent.estimatedWaitTime || currentStudent.currentWaitTime,
-              name: student.name,
-              idNum: student.idNum || student.id_num,
-              typeOfIssue: student.typeOfIssue,
-              collegeFaculty: student.collegeFaculty || '',
-              email: student.email || '',
-              phone: student.phone || '',
-              tellerDesk: currentStudent.teller || null,
-            }
-          } else {
-            console.warn('Current student data not found in WebSocket array')
-          }
-        } else {
-          queueData.value = {
-            position: data.position || data.queuePosition,
-            estimatedTime: data.currentWaitTime,
-            name: data.name,
-            idNum: data.idNum,
-            typeOfIssue: data.typeOfIssue,
-            collegeFaculty: data.collegeFaculty || '',
-            email: data.email || '',
-            phone: data.phone || '',
-            tellerDesk: data.teller || null,
-          }
-        }
-      } catch (error) {
-        console.error('Error parsing WebSocket message:', error)
+      ws.onopen = () => {
+        console.log('WebSocket connection opened')
       }
-    }
 
-    ws.onerror = (error) => {
-      console.error('WebSocket error:', error)
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data)
+          queueData.value = {
+            position: data[0].position || data[0].queuePosition,
+            estimatedTime: data[0].estimatedWaitTime,
+            name: data[0].student.name,
+            idNum: data[0].student.id_num,
+            typeOfIssue: data[0].student.typeOfIssue,
+            collegeFaculty: data[0].student.collegeFaculty || '',
+            email: data[0].student.email || '',
+            phone: data[0].student.phone || '',
+            tellerDesk: data[0].teller || null,
+          }
+
+        } catch (error) {
+          console.error('Error parsing WebSocket message:', error)
+        }
+      }
+
+      ws.onerror = (error) => {
+        console.error('WebSocket error:', error)
+      }
+    } catch (error) {
+      console.error('Error setting up WebSocket:', error)
     }
-  } catch (error) {
-    console.error('Error setting up WebSocket:', error)
   }
 })
 
@@ -430,29 +341,32 @@ onUnmounted(() => {
 
 const handleJoinQueue = async () => {
   try {
-    const response = await fetch('http://localhost:8080/students', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: document.getElementById('name').value,
-        id_num: document.getElementById('student-id').value,
-        collegeFaculty: document.getElementById('faculty').value,
-        studentLevel: 'undergraduate', // Assuming default level
-        phone: document.getElementById('phone').value,
-        email: document.getElementById('email').value,
-        typeOfIssue: document.getElementById('issue-type').value,
-      }),
+    const response = await authApi.post('/students', {
+      name: document.getElementById('name').value,
+      id_num: document.getElementById('student-id').value,
+      collegeFaculty: document.getElementById('faculty').value,
+      studentLevel: 'undergraduate', // Assuming default level
+      phone: document.getElementById('phone').value,
+      email: document.getElementById('email').value,
+      typeOfIssue: document.getElementById('issue-type').value,
     })
 
-    if (!response.ok) {
+
+    console.log(response);
+    if (response.status != 201) {
       throw new Error('Failed to join queue')
     }
 
-    const data = await response.json()
+    const data = await response.data
+
     isInQueue.value = true
     queueData.value = {
+      name: data.name,
+      idNum: data.idNum,
+      typeOfIssue: data.typeOfIssue,
+      collegeFaculty: data.collegeFaculty,
+      email: data.email,
+      phone: data.phone,
       position: data.queuePosition,
       estimatedTime: data.estimatedWaitTime,
       tellerDesk: null,
@@ -469,15 +383,14 @@ const handleJoinQueue = async () => {
 const handleExitQueue = async () => {
   try {
     const session = JSON.parse(localStorage.getItem('session'))
-    const response = await fetch(`http://localhost:8080/students/${session.id}/exit`, {
-      method: 'PUT',
-    })
+    const response = await authApi.put(`/students/${session.id}/exit`)
 
-    if (!response.ok) {
+    if (response.status != 200 || response.status != 201) {
       throw new Error('Failed to exit queue')
     }
 
     isInQueue.value = false
+    localStorage.removeItem("session")
   } catch (error) {
     console.error('Error exiting queue:', error)
     alert('Failed to exit queue. Please try again.')
@@ -489,16 +402,11 @@ const handleSubmitFeedback = async () => {
     const rating = document.querySelector('button[aria-pressed="true"]')?.textContent || '5'
     const feedback = document.getElementById('feedback').value
 
-    const response = await fetch('http://localhost:8080/feedback', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        studentId: document.getElementById('student-id').value,
-        rating: parseInt(rating),
-        feedback: feedback,
-      }),
+    const response = await authApi.post('/feedback', {
+      studentId: document.getElementById('student-id').value,
+      rating: parseInt(rating),
+      feedback: feedback,
+
     })
 
     if (!response.ok) {

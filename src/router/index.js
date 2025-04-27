@@ -25,17 +25,28 @@ const routes = [
     path: '/teller',
     name: 'TellerDashboard',
     component: TellerDashboard,
+    meta: { requiresAuth: true },
   },
   {
     path: '/admin',
     name: 'AdminDashboard',
     component: AdminDashboard,
+    meta: { requiresAuth: true },
   },
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach(async (to, from) => {
+  if (to.meta.requiresAuth) {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      return { path: '/login' }
+    }
+  }
 })
 
 export default router
