@@ -96,6 +96,25 @@
                 </div>
                 <div class="space-y-2">
                   <label
+                    for="student-level"
+                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >Student Level</label
+                  >
+                  <select
+                    id="student-level"
+                    v-model="studentLevel"
+                    required
+                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <option value="" disabled selected>Select Level</option>
+                    <option value="Undergraduate">Undergraduate</option>
+                    <option value="Post-graduate">Post-graduate</option>
+                  </select>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div class="space-y-2">
+                  <label
                     for="issue-type"
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >Issue Type</label
@@ -205,7 +224,7 @@
         </div>
 
         <div v-else class="space-y-6 w-full max-w-md">
-          <QueueStatus :position="queueData.position" :estimatedTime="queueData.estimatedTime" />
+          <QueueStatus :position="queueData.position" :estimatedTime="queueData.estimatedTime" :ticketNumber="queueData.ticketNumber" />
 
           <div class="w-full">
             <div class="flex flex-col space-y-2">
@@ -351,6 +370,8 @@ const queueData = ref({
 })
 const activeTab = ref('status')
 
+const studentLevel = ref('')
+
 let ws = null
 
 onMounted(() => {
@@ -374,6 +395,7 @@ onMounted(() => {
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data)
+        console.log('StudentPortal WebSocket message received:', data)
         if (Array.isArray(data)) {
           const session = JSON.parse(localStorage.getItem('session'))
           let currentStudent = data.find((item) => item.student?.id === session.id)
@@ -393,6 +415,7 @@ onMounted(() => {
               phone: student.phone || '',
               tellerDesk: currentStudent.teller || null,
             }
+            console.log('StudentPortal updated queueData:', queueData.value)
           } else {
             console.warn('Current student data not found in WebSocket array')
           }
@@ -408,6 +431,7 @@ onMounted(() => {
             phone: data.phone || '',
             tellerDesk: data.teller || null,
           }
+          console.log('StudentPortal updated queueData:', queueData.value)
         }
       } catch (error) {
         console.error('Error parsing WebSocket message:', error)
@@ -434,12 +458,12 @@ const handleJoinQueue = async () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-      },
+      }, 
       body: JSON.stringify({
         name: document.getElementById('name').value,
-        id_num: document.getElementById('student-id').value,
+        id_num: Number(document.getElementById("student-id").value),
         collegeFaculty: document.getElementById('faculty').value,
-        studentLevel: 'undergraduate', // Assuming default level
+        studentLevel: studentLevel.value,
         phone: document.getElementById('phone').value,
         email: document.getElementById('email').value,
         typeOfIssue: document.getElementById('issue-type').value,
@@ -456,6 +480,7 @@ const handleJoinQueue = async () => {
       position: data.queuePosition,
       estimatedTime: data.estimatedWaitTime,
       tellerDesk: null,
+      ticketNumber: data.ticketNumber,
     }
 
     // Save only id and token from response
@@ -465,6 +490,7 @@ const handleJoinQueue = async () => {
     alert('Failed to join queue. Please try again.')
   }
 }
+  
 
 const handleExitQueue = async () => {
   try {

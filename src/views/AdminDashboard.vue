@@ -1,4 +1,3 @@
-// AdminDashboard.vue
 <template>
   <div class="flex min-h-screen flex-col">
     <header class="sticky top-0 z-10 border-b bg-blue-600 text-white">
@@ -14,51 +13,66 @@
           </router-link>
         </div>
         <div class="flex items-center gap-4">
+<button
+  @click="toggleExportMenu"
+  class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 flex items-center gap-2 relative"
+>
+  <Download class="h-4 w-4" />
+  Report
+</button>
+<div v-if="showExportMenu" :class="exportMenuClasses" class="mt-2 rounded-md shadow-lg bg-popover text-popover-foreground z-50 p-4 max-h-[600px] overflow-auto space-y-4">
+  <div>
+    <label class="block mb-1 font-semibold">Report Type</label>
+    <select v-model="selectedReportType" class="w-full p-2 border rounded" aria-label="Select report type">
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+      <option value="monthly">Monthly</option>
+      <option value="annual">Annual</option>
+    </select>
+  </div>
+  <div>
+    <label class="block mb-1 font-semibold">Date</label>
+    <input type="date" v-model="selectedDate" class="w-full p-2 border rounded" />
+  </div>
+  <div class="flex justify-between">
+    <button @click="showExportMenu = false" class="px-3 py-1 rounded bg-gray-300 hover:bg-gray-400">Cancel</button>
+    <button @click="generateReport" class="px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700">Generate Report</button>
+  </div>
+
+  <div v-if="reportData">
+    <div
+      class="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm z-50"
+      @click="closeReportMenu"
+    ></div>
+    <div
+      class="fixed z-60 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md shadow-lg bg-popover text-popover-foreground p-4 max-h-[600px] overflow-auto space-y-4 w-80 flex flex-col justify-between h-[600px]"
+      @click.stop
+    >
+      <h3 class="font-semibold">Report Summary</h3>
+      <ul class="list-disc list-inside space-y-1 overflow-auto flex-grow">
+        <li>Total Service Reps: {{ reportData.totalServiceReps }}</li>
+        <li>Active Service Reps: {{ reportData.activeServiceReps }}</li>
+        <li>Average Service Time (min): {{ reportData.averageServiceTimeMinutes }}</li>
+        <li>Total Students Joined: {{ reportData.totalStudentsJoinedToday }}</li>
+        <li>Top Issue: {{ reportData.topIssue }} ({{ reportData.topIssuePercentage }}%)</li>
+      </ul>
+
+      <h3 class="font-semibold">Peak Hours</h3>
+      <Bar :data="peakHoursChartData" :options="chartOptions" style="height: 200px;" />
+
+      <div class="flex justify-end mt-auto">
+        <button @click="fetchAndExportReport" class="px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700">Export</button>
+      </div>
+    </div>
+  </div>
+</div>
           <button
-            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-white h-9 w-9 relative"
+            @click="isAddTellerOpen = true"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2 flex items-center gap-2 mr-2"
           >
-            <Bell class="h-5 w-5" />
-            <span
-              class="absolute -top-1 -right-1 inline-flex items-center justify-center h-5 w-5 text-xs font-bold text-black bg-white rounded-full border border-black"
-            >
-              2
-            </span>
+            <Plus class="h-4 w-4" />
+            Add Teller
           </button>
-          <div class="relative">
-            <button
-              @click="isUserMenuOpen = !isUserMenuOpen"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-white h-9 px-4 py-2 flex items-center gap-2 mr-2"
-            >
-              <User class="h-4 w-4" />
-              <span>Admin Name</span>
-            </button>
-            <div
-              v-if="isUserMenuOpen"
-              class="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-popover text-popover-foreground z-50"
-            >
-              <div class="py-1 px-2 text-sm font-medium">My Account</div>
-              <div class="h-px bg-muted my-1"></div>
-              <button
-                class="flex w-full items-center px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm"
-              >
-                Profile
-              </button>
-              <button
-                class="flex w-full items-center px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm"
-              >
-                Settings
-              </button>
-              <div class="h-px bg-muted my-1"></div>
-              <router-link to="/">
-                <button
-                  class="flex w-full items-center px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm"
-                >
-                  <LogOut class="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </button>
-              </router-link>
-            </div>
-          </div>
         </div>
       </div>
     </header>
@@ -72,19 +86,6 @@
             <p class="text-muted-foreground">Manage tellers and view queue analytics.</p>
           </div>
           <div class="flex items-center gap-4">
-            <button
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 flex items-center gap-2"
-            >
-              <Download class="h-4 w-4" />
-              Export Reports
-            </button>
-            <button
-              @click="isAddTellerOpen = true"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2 flex items-center gap-2 mr-2"
-            >
-              <Plus class="h-4 w-4" />
-              Add Teller
-            </button>
           </div>
         </div>
 
@@ -170,7 +171,7 @@
             </div>
 
             <div v-if="activeTab === 'analytics'" class="space-y-6">
-              <div class="rounded-lg border bg-card text-card-foreground shadow-sm ml-2 mr-2">
+              <div class="rounded-lg border bg-card text-card-foreground shadow-sm ml-2 mr-2" style="height: 300px;">
                 <div class="flex flex-col space-y-1.5 p-6">
                   <h3 class="text-2xl font-semibold leading-none tracking-tight">
                     Queue Analytics
@@ -179,8 +180,8 @@
                     View trends and statistics about the student queue.
                   </p>
                 </div>
-                <div class="p-6">
-                  <AdminQueueStats />
+                <div class="p-6" style="height: 220px;">
+                  <Bar :data="chartData" :options="chartOptions" />
                 </div>
               </div>
 
@@ -224,7 +225,6 @@
                   <div class="flex flex-col space-y-1.5 p-6 pb-2">
                     <h3 class="text-lg font-semibold leading-none tracking-tight">Top Issue</h3>
                   </div>
-
                   <div class="p-6 pt-0">
                     <div class="text-3xl font-bold">{{ topIssue }}</div>
                     <p class="text-sm text-muted-foreground">
@@ -252,11 +252,23 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { Clock, Bell, User, LogOut, Download, Plus } from 'lucide-vue-next'
-import AdminTellerTable from '@/views/AdminTellerTable.vue'
-import AdminQueueStats from '@/views/AdminQueueStats.vue'
-import AdminAddTellerDialog from '@/views/AdminAddTellerDialog.vue'
+import { Bar } from 'vue-chartjs'
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+} from 'chart.js'
+import AdminTellerTable from './AdminTellerTable.vue'
+import AdminQueueStats from './AdminQueueStats.vue'
+import AdminAddTellerDialog from './AdminAddTellerDialog.vue'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 const isUserMenuOpen = ref(false)
 const isAddTellerOpen = ref(false)
@@ -269,6 +281,31 @@ const totalStudentsJoinedToday = ref(0)
 const peakHours = ref([])
 const topIssue = ref('')
 const topIssuePercentage = ref(0)
+
+const chartData = ref({
+  labels: [],
+  datasets: [
+    {
+      label: "People Joined",
+      backgroundColor: "#3b82f6",
+      data: [],
+    },
+  ],
+})
+
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      position: "top",
+    },
+    title: {
+      display: true,
+      text: "Queue Peak Hours",
+    },
+  },
+}
 
 onMounted(async () => {
   try {
@@ -284,15 +321,132 @@ onMounted(async () => {
     peakHours.value = data.peakHours
     topIssue.value = data.topIssue
     topIssuePercentage.value = data.topIssuePercentage
+
+    // Update chart data
+    chartData.value.labels = peakHours.value.map((h) => formatHour(h.hour))
+    chartData.value.datasets[0].data = peakHours.value.map((h) => h.count)
   } catch (error) {
     console.error('Error fetching service reps stats:', error)
   }
 })
+
 const formatHour = (hour24) => {
   let hour = parseInt(hour24, 10)
   const ampm = hour >= 12 ? 'PM' : 'AM'
   hour = hour % 12
   if (hour === 0) hour = 12
   return `${hour}${ampm}`
+}
+
+function exportReports() {
+  // This function is now replaced by fetchAndExportReport triggered from menu
+}
+
+const showExportMenu = ref(false)
+const selectedReportType = ref('daily')
+const selectedDate = ref(new Date().toISOString().substr(0, 10))
+const reportData = ref(null)
+
+const exportMenuAlignRight = ref(true)
+const isReportGenerated = ref(false)
+
+function toggleExportMenu() {
+  showExportMenu.value = !showExportMenu.value
+  if (!showExportMenu.value) {
+    isReportGenerated.value = false
+  }
+  if (showExportMenu.value) {
+    // Check if menu will overflow viewport width, adjust alignment
+    nextTick(() => {
+      const menu = document.querySelector('.export-menu')
+      if (menu) {
+        const rect = menu.getBoundingClientRect()
+        if (rect.right > window.innerWidth) {
+          exportMenuAlignRight.value = false
+        } else {
+          exportMenuAlignRight.value = true
+        }
+      }
+    })
+  }
+}
+
+async function generateReport() {
+  if (!selectedDate.value) {
+    alert('Please select a date')
+    return
+  }
+  try {
+    const response = await fetch(`http://localhost:8080/reports?type=${selectedReportType.value}&date=${selectedDate.value}`)
+    if (!response.ok) {
+      throw new Error('Failed to fetch report')
+    }
+    const data = await response.json()
+    if (!data) {
+      alert('No data found for the selected report')
+      return
+    }
+    reportData.value = data
+    isReportGenerated.value = true
+  } catch (error) {
+    alert('Error generating report: ' + error.message)
+  }
+}
+
+const exportMenuClasses = computed(() => {
+  if (isReportGenerated.value) {
+    return [
+      'fixed',
+      'top-1/2',
+      'left-1/2',
+      'transform',
+      '-translate-x-1/2',
+      '-translate-y-1/2',
+      'rounded-md',
+      'shadow-lg',
+      'bg-popover',
+      'text-popover-foreground',
+      'z-50',
+      'p-4',
+      'max-h-[600px]',
+      'overflow-auto',
+      'space-y-4',
+      'w-80',
+      'export-menu',
+      'flex',
+      'flex-col',
+      'justify-between',
+      'h-[600px]',
+    ]
+  }
+  return [
+    'absolute',
+    'mt-2',
+    'rounded-md',
+    'shadow-lg',
+    'bg-popover',
+    'text-popover-foreground',
+    'z-50',
+    'p-4',
+    'max-h-[600px]',
+    'overflow-auto',
+    'space-y-4',
+    'w-80',
+    exportMenuAlignRight.value ? 'right-0' : 'left-0',
+    'export-menu',
+  ]
+})
+
+
+import { nextTick } from 'vue'
+
+const closeReportMenu = () => {
+  reportData.value = null
+  isReportGenerated.value = false
+  // Also close the export menu if open
+  showExportMenu.value = false
+  nextTick(() => {
+    // Additional cleanup if needed
+  })
 }
 </script>

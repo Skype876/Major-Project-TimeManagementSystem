@@ -4,11 +4,11 @@
       <div class="text-center">
         <h2 class="text-xl font-semibold">You are in the queue</h2>
         <div class="mt-4 flex justify-center">
-            <div
-              class="flex h-24 w-24 items-center justify-center rounded-full bg-primary-foreground text-4xl font-bold text-primary"
-            >
-              {{ queueData.position || '--' }}
-            </div>
+          <div
+            class="flex h-24 w-24 items-center justify-center rounded-full bg-primary-foreground text-4xl font-bold text-primary"
+          >
+            {{ queueData.position || '--' }}
+          </div>
         </div>
         <p class="mt-4 text-sm">Your position in line</p>
       </div>
@@ -16,8 +16,8 @@
     <div class="p-6">
       <div class="flex justify-between">
         <div class="text-center">
-          <p class="text-sm font-medium text-muted-foreground">Estimated Wait Time</p>
-          <p class="text-2xl font-bold">{{ queueData.estimatedTime }} min</p>
+          <p class="text-sm font-medium text-muted-foreground">Ticket Number</p>
+          <p class="text-2xl font-bold">{{ queueData.ticketNumber || '--' }}</p>
         </div>
         <div class="text-center">
           <p class="text-sm font-medium text-muted-foreground">Teller Desk</p>
@@ -36,19 +36,23 @@ const route = useRoute()
 const queueData = ref({
   position: 0,
   estimatedTime: 0,
+  ticketNumber: null,
+  tellerDesk: null,
 })
 
 let ws = null
 
 onMounted(async () => {
   let session = JSON.parse(localStorage.getItem('session'))
-  console.log('session', session)
   if (!session || !session.id || !session.token) {
     console.error('Session id or token missing, cannot establish WebSocket connection')
     return
   }
+  // Initialize ticketNumber from route query param if present
+  if (route.query.ticketNumber) {
+    queueData.value.ticketNumber = route.query.ticketNumber
+  }
   try {
-    // Use id and token from session for WebSocket connection
     const { id, token } = session
 
     ws = new WebSocket(`ws://localhost:8080/queue/updates/${id}?token=${token}`)
@@ -60,28 +64,25 @@ onMounted(async () => {
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data)
-        console.log('WebSocket message received:', data)
+        console.log('QueueStatus WebSocket message received:', data)
         if (Array.isArray(data)) {
-          // Find current student data by matching id from session inside nested student object
           const session = JSON.parse(localStorage.getItem('session'))
-          console.log('Session id:', session.id)
-          console.log('Ids in WebSocket data:', data.map(item => item.student?.id))
-          // Try matching by student.id or student.id_num
-          let currentStudent = data.find(item => item.student?.id === session.id)
+          let currentStudent = data.find((item) => item.student?.id === session.id)
           if (!currentStudent) {
-            currentStudent = data.find(item => item.student?.id_num === session.id)
+            currentStudent = data.find((item) => item.student?.id_num === session.id)
           }
           if (currentStudent) {
             const student = currentStudent.student
-queueData.value = {
-  position: currentStudent.queuePosition || currentStudent.position,
-  estimatedTime: currentStudent.estimatedWaitTime || currentStudent.currentWaitTime,
-  name: student.name,
-  idNum: student.idNum || student.id_num,
-  typeOfIssue: student.typeOfIssue,
-  tellerDesk: currentStudent.teller || null
-}
-            console.log('Updated queueData:', queueData.value)
+            queueData.value = {
+              position: currentStudent.queuePosition || currentStudent.position,
+              estimatedTime: currentStudent.estimatedWaitTime || currentStudent.currentWaitTime,
+              name: student.name,
+              idNum: student.idNum || student.id_num,
+              typeOfIssue: student.typeOfIssue,
+              tellerDesk: currentStudent.teller || null,
+              ticketNumber: currentStudent.ticketNumber || student.ticketNumber || null,
+            }
+            console.log('QueueStatus updated queueData:', queueData.value)
           } else {
             console.warn('Current student data not found in WebSocket array')
           }
@@ -92,17 +93,18 @@ queueData.value = {
             name: data.name,
             idNum: data.idNum,
             typeOfIssue: data.typeOfIssue,
-            tellerDesk: data.teller || null
+            tellerDesk: data.teller || null,
+            ticketNumber: data.ticketNumber || null,
           }
-          console.log('Updated queueData:', queueData.value)
-        }
-
-        ws.onerror = (error) => {
-          console.error('WebSocket error:', error)
+          console.log('QueueStatus updated queueData:', queueData.value)
         }
       } catch (error) {
         console.error('Error setting up WebSocket:', error)
       }
+    }
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error)
     }
   } catch (error) {
     console.error('Error setting up WebSocket:', error)
