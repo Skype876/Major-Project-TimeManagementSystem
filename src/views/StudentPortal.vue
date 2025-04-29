@@ -298,7 +298,7 @@ onMounted(() => {
     isInQueue.value = true
     try {
       const { id, token } = session
-      ws = new WebSocket(`ws://localhost:8080/queue/updates/${id}?token=${token}`)
+      ws = new WebSocket(`wss://student-queue-458302.uc.r.appspot.com/queue/updates/${id}?token=${token}`)
 
       ws.onopen = () => {
         console.log('WebSocket connection opened')

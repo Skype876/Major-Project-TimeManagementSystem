@@ -23,21 +23,16 @@
           </tr>
         </thead>
         <tbody class="[&_tr:last-child]:border-0">
-          <tr
-            v-for="student in queueData"
-            :key="student.id"
-            class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
-          >
+          <tr v-for="student in queueData" :key="student.id"
+            class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
             <td class="p-4 align-middle font-medium">{{ student.queuePosition }}</td>
             <td class="p-4 align-middle">{{ student.name }}</td>
             <td class="p-4 align-middle">{{ student.id_num }}</td>
             <td class="p-4 align-middle">{{ student.typeOfIssue }}</td>
             <td class="p-4 align-middle">{{ student.currentWaitTime }} min</td>
             <td class="p-4 align-middle text-right">
-              <button
-                @click="callStudent(student.id)"
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-9 px-3"
-              >
+              <button @click="callStudent(student.id)"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-9 px-3">
                 Call
               </button>
             </td>
@@ -60,7 +55,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted} from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { api } from '@/services/api'
 
 const emit = defineEmits('student-info')
@@ -70,7 +65,7 @@ const socket = ref(null)
 const selectedStudent = ref(null)
 
 // Constants
-const WEBSOCKET_URL = 'ws://localhost:8080/queue/updates'
+const WEBSOCKET_URL = 'wss://student-queue-458302.uc.r.appspot.com/queue/updates'
 const STUDENT_ENDPOINT = '/students/byID'
 const STUDENT_STATUS_ENDPOINT = '/students'
 
@@ -128,7 +123,7 @@ const callStudent = async (studentId) => {
     selectedStudent.value = studentInfo
 
     // Emit event with normalized data
-    emit('student-info',{
+    emit('student-info', {
       id: studentInfo.id,
       name: studentInfo.name,
       id_num: studentInfo.id_num,
@@ -157,6 +152,3 @@ onUnmounted(() => {
   }
 })
 </script>
-
-  
-    

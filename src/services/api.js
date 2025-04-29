@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const createApiInstance = () => {
   const instance = axios.create({
-    baseURL: 'http://localhost:8080/',
+    baseURL: 'https://student-queue-458302.uc.r.appspot.com/',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -24,7 +24,7 @@ const createApiInstance = () => {
 const api = createApiInstance()
 
 const authApi = axios.create({
-  baseURL: 'http://localhost:8080/',
+  baseURL: 'https://student-queue-458302.uc.r.appspot.com/',
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
