@@ -125,10 +125,11 @@
                     class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <option value="" disabled selected>Select Issue</option>
-                    <option value="financial-aid">Financial Aid</option>
-                    <option value="tuition">Tuition Payment</option>
-                    <option value="scholarship">Scholarship</option>
-                    <option value="loan">Student Loan</option>
+                    <option value="accoun balance">Account / Balance Query</option>
+                    <option value="fee payment">Fee Payment Issues</option>
+                    <option value="adjustment">Account Adjustment</option>
+                    <option value="slb">SLB Issues</option>
+                    <option value="graduation">Graduation Issues</option>
                     <option value="other">Other</option>
                   </select>
                 </div>
