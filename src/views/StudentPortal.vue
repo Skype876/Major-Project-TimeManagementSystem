@@ -1,4 +1,3 @@
-//StudentPortal.vue
 <template>
   <div class="flex min-h-screen flex-col">
     <header class="sticky top-0 z-10 border-b bg-blue-600 text-white">
@@ -45,14 +44,14 @@
                   <label for="name"
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Full
                     Name</label>
-                  <input id="name" placeholder="John Doe" required
+                  <input id="name" placeholder="John Doe" v-model="formData.name" required
                     class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
                 </div>
                 <div class="space-y-2">
                   <label for="student-id"
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Student
                     ID</label>
-                  <input id="student-id" placeholder="S12345678" required
+                  <input id="student-id" placeholder="S12345678" required v-model="formData.id_num"
                     class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
                 </div>
               </div>
@@ -60,7 +59,7 @@
                 <div class="space-y-2">
                   <label for="faculty"
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Faculty</label>
-                  <select id="faculty" required
+                  <select id="faculty" required v-model="formData.collegeFaculty"
                     class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                     <option value="" disabled selected>Select Faculty</option>
                     <option value="arts">Arts & Humanities</option>
@@ -71,16 +70,30 @@
                   </select>
                 </div>
                 <div class="space-y-2">
+                  <label for="student-level"
+                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Student
+                    Level</label>
+                  <select id="student-level" v-model="formData.studentLevel" required
+                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                    <option value="" disabled selected>Select Level</option>
+                    <option value="Undergraduate">Undergraduate</option>
+                    <option value="Post-graduate">Post-graduate</option>
+                  </select>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div class="space-y-2">
                   <label for="issue-type"
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Issue
                     Type</label>
-                  <select id="issue-type" required
+                  <select id="issue-type" required v-model="formData.typeOfIssue"
                     class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                     <option value="" disabled selected>Select Issue</option>
-                    <option value="financial-aid">Financial Aid</option>
-                    <option value="tuition">Tuition Payment</option>
-                    <option value="scholarship">Scholarship</option>
-                    <option value="loan">Student Loan</option>
+                    <option value="account balance">Account / Balance Query</option>
+                    <option value="fee payment">Fee Payment Issues</option>
+                    <option value="adjustment">Account Adjustment</option>
+                    <option value="slb">SLB Issues</option>
+                    <option value="graduation">Graduation Issues</option>
                     <option value="other">Other</option>
                   </select>
                 </div>
@@ -89,14 +102,14 @@
                 <label for="email"
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Email
                   Address</label>
-                <input id="email" type="email" placeholder="john.doe@example.com" required
+                <input id="email" type="email" placeholder="john.doe@example.com" required v-model="formData.email"
                   class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
               </div>
               <div class="space-y-2">
                 <label for="phone"
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Phone
                   Number (for notifications)</label>
-                <input id="phone" type="tel" placeholder="+1 (555) 123-4567"
+                <input id="phone" type="tel" v-model="formData.phone" placeholder="+1 (555) 123-4567"
                   class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
               </div>
               <button type="submit"
@@ -146,7 +159,8 @@
         </div>
 
         <div v-else class="space-y-6 w-full max-w-md">
-          <QueueStatus :position="queueData.position" :estimatedTime="minutes" :tellerDesk="queueData.tellerDesk" />
+          <QueueStatus :position="queueData.position" :estimatedTime="queueData.estimatedTime"
+            :ticketNumber="queueData.ticketNumber" />
 
           <div class="w-full">
             <div class="flex flex-col space-y-2">
@@ -187,7 +201,7 @@
                       </div>
                       <div class="space-y-2">
                         <p class="text-sm font-medium text-muted-foreground">Estimated Wait Time</p>
-                        <p class="text-2xl font-bold">{{ minutes }} minutes</p>
+                        <p class="text-2xl font-bold">{{ queueData.estimatedTime }} minutes</p>
                       </div>
                     </div>
                     <div class="space-y-2">
@@ -269,9 +283,25 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { ArrowLeft } from 'lucide-vue-next'
 import QueueStatus from '@/views/QueueStatus.vue'
-import { api, authApi } from '@/services/api'
+import { authApi } from '@/services/api'
 
+// Reactive state
 const isInQueue = ref(false)
+const activeTab = ref('status')
+const websocket = ref(null)
+
+// Form data with default values
+const formData = ref({
+  name: '',
+  id_num: '',
+  collegeFaculty: '',
+  studentLevel: '',
+  phone: '',
+  email: '',
+  typeOfIssue: ''
+})
+
+// Queue data with type safety through default values
 const queueData = ref({
   position: 0,
   estimatedTime: 0,
@@ -280,120 +310,113 @@ const queueData = ref({
   idNum: '',
   typeOfIssue: '',
   collegeFaculty: '',
+  studentLevel: '',
   email: '',
-  phone: '',
+  phone: ''
 })
-const activeTab = ref('status')
 
-const minutes = computed(() => {
-  return Math.floor(queueData.value.estimatedTime / 60000)
-})
-let ws = null
+// Computed properties
+const minutes = computed(() => Math.floor(queueData.value.estimatedTime / 60000))
 
-onMounted(() => {
-  let session = JSON.parse(localStorage.getItem('session'))
+// Constants
+const WEBSOCKET_URL = 'wss://student-queue-f9fmhac6gcgpf4dd.canadacentral-01.azurewebsites.net/queue/updates'
+const SESSION_KEY = 'session'
 
-  // Set isInQueue to true if session exists to show queue status on reload
-  if (session && session.id && session.token) {
-    isInQueue.value = true
-    try {
-      const { id, token } = session
-      ws = new WebSocket(`wss://student-queue-458302.uc.r.appspot.com/queue/updates/${id}?token=${token}`)
+// Methods
+const initializeWebSocket = (id, token) => {
+  try {
+    websocket.value = new WebSocket(`${WEBSOCKET_URL}/${id}?token=${token}`)
 
-      ws.onopen = () => {
-        console.log('WebSocket connection opened')
+    websocket.value.onopen = () => console.log('WebSocket connection established')
+
+    websocket.value.onmessage = (event) => {
+      try {
+        const [data] = JSON.parse(event.data)
+        updateQueueData(data)
+      } catch (error) {
+        console.error('Error processing WebSocket message:', error)
       }
-
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data)
-          queueData.value = {
-            position: data[0].position || data[0].queuePosition,
-            estimatedTime: data[0].estimatedWaitTime,
-            name: data[0].student.name,
-            idNum: data[0].student.id_num,
-            typeOfIssue: data[0].student.typeOfIssue,
-            collegeFaculty: data[0].student.collegeFaculty || '',
-            email: data[0].student.email || '',
-            phone: data[0].student.phone || '',
-            tellerDesk: data[0].teller || null,
-          }
-
-        } catch (error) {
-          console.error('Error parsing WebSocket message:', error)
-        }
-      }
-
-      ws.onerror = (error) => {
-        console.error('WebSocket error:', error)
-      }
-    } catch (error) {
-      console.error('Error setting up WebSocket:', error)
     }
-  }
-})
 
-onUnmounted(() => {
-  if (ws) {
-    ws.close()
+    websocket.value.onerror = (error) => {
+      console.error('WebSocket error:', error)
+    }
+
+  } catch (error) {
+    console.error('WebSocket initialization failed:', error)
+    throw error
   }
-})
+}
+
+const updateQueueData = (data) => {
+  queueData.value = {
+    position: data.position || data.queuePosition,
+    estimatedTime: data.estimatedWaitTime,
+    tellerDesk: data.teller || null,
+    name: data.student.name,
+    idNum: data.student.id_num,
+    typeOfIssue: data.student.typeOfIssue,
+    collegeFaculty: data.student.collegeFaculty || '',
+    studentLevel: data.student.studentLevel || '',
+    email: data.student.email || '',
+    phone: data.student.phone || ''
+  }
+}
+
+const loadSession = () => {
+  const session = JSON.parse(localStorage.getItem(SESSION_KEY))
+  if (session?.id && session?.token) {
+    isInQueue.value = true
+    initializeWebSocket(session.id, session.token)
+  }
+}
 
 const handleJoinQueue = async () => {
   try {
-    const response = await authApi.post('/students', {
-      name: document.getElementById('name').value,
-      id_num: document.getElementById('student-id').value,
-      collegeFaculty: document.getElementById('faculty').value,
-      studentLevel: 'undergraduate', // Assuming default level
-      phone: document.getElementById('phone').value,
-      email: document.getElementById('email').value,
-      typeOfIssue: document.getElementById('issue-type').value,
-    })
+    const { data } = await authApi.post('/students', formData.value)
 
-
-    console.log(response);
-    if (response.status != 201) {
-      throw new Error('Failed to join queue')
-    }
-
-    const data = await response.data
+    if (!data) throw new Error('No data received from server')
 
     isInQueue.value = true
-    queueData.value = {
-      name: data.name,
-      idNum: data.idNum,
-      typeOfIssue: data.typeOfIssue,
-      collegeFaculty: data.collegeFaculty,
-      email: data.email,
-      phone: data.phone,
+    updateQueueData({
+      ...data,
+      student: {
+        name: data.name,
+        id_num: data.idNum,
+        typeOfIssue: data.typeOfIssue,
+        collegeFaculty: data.collegeFaculty,
+        studentLevel: data.studentLevel,
+        email: data.email,
+        phone: data.phone
+      },
       position: data.queuePosition,
-      estimatedTime: data.estimatedWaitTime,
-      tellerDesk: null,
-    }
+      estimatedWaitTime: data.estimatedWaitTime
+    })
 
-    // Save only id and token from response
-    localStorage.setItem('session', JSON.stringify({ id: data.id, token: data.token }))
+    // Persist only necessary session data
+    localStorage.setItem(SESSION_KEY, JSON.stringify({
+      id: data.id,
+      token: data.token
+    }))
+
   } catch (error) {
-    console.error('Error joining queue:', error)
-    alert('Failed to join queue. Please try again.')
+    console.error('Queue join error:', error)
+    alert(`Failed to join queue: ${error.message || 'Please try again.'}`)
   }
 }
 
 const handleExitQueue = async () => {
   try {
-    const session = JSON.parse(localStorage.getItem('session'))
-    const response = await authApi.put(`/students/${session.id}/exit`)
+    const session = JSON.parse(localStorage.getItem(SESSION_KEY))
+    if (!session?.id) throw new Error('No active session found')
 
-    if (response.status != 200 || response.status != 201) {
-      throw new Error('Failed to exit queue')
-    }
+    await authApi.put(`/students/${session.id}/exit`)
 
-    isInQueue.value = false
-    localStorage.removeItem("session")
+    cleanupQueueSession()
+
   } catch (error) {
-    console.error('Error exiting queue:', error)
-    alert('Failed to exit queue. Please try again.')
+    console.error('Queue exit error:', error)
+    alert(`Failed to exit queue: ${error.message || 'Please try again.'}`)
   }
 }
 
@@ -401,22 +424,41 @@ const handleSubmitFeedback = async () => {
   try {
     const rating = document.querySelector('button[aria-pressed="true"]')?.textContent || '5'
     const feedback = document.getElementById('feedback').value
+    const studentId = document.getElementById('student-id').value
 
-    const response = await authApi.post('/feedback', {
-      studentId: document.getElementById('student-id').value,
+    if (!studentId) throw new Error('Student ID is required')
+
+    await authApi.post('/feedback', {
+      studentId,
       rating: parseInt(rating),
-      feedback: feedback,
-
+      feedback
     })
 
-    if (!response.ok) {
-      throw new Error('Failed to submit feedback')
-    }
+    cleanupQueueSession()
 
-    isInQueue.value = false
   } catch (error) {
-    console.error('Error submitting feedback:', error)
-    alert('Failed to submit feedback. Please try again.')
+    console.error('Feedback submission error:', error)
+    alert(`Failed to submit feedback: ${error.message || 'Please try again.'}`)
   }
 }
+
+const cleanupQueueSession = () => {
+  isInQueue.value = false
+  localStorage.removeItem(SESSION_KEY)
+  if (websocket.value) {
+    websocket.value.close()
+    websocket.value = null
+  }
+}
+
+// Lifecycle hooks
+onMounted(() => {
+  loadSession()
+})
+
+onUnmounted(() => {
+  if (websocket.value) {
+    websocket.value.close()
+  }
+})
 </script>

@@ -65,7 +65,7 @@ const socket = ref(null)
 const selectedStudent = ref(null)
 
 // Constants
-const WEBSOCKET_URL = 'wss://student-queue-458302.uc.r.appspot.com/queue/updates'
+const WEBSOCKET_URL = 'wss://student-queue-f9fmhac6gcgpf4dd.canadacentral-01.azurewebsites.net/queue/updates'
 const STUDENT_ENDPOINT = '/students/byID'
 const STUDENT_STATUS_ENDPOINT = '/students'
 
@@ -133,6 +133,18 @@ const callStudent = async (studentId) => {
       phone: studentInfo.phone || 'N/A',
       estimatedWaitTime: studentInfo.estimatedWaitTime,
     })
+
+    // axios({
+    //   url: 'https://formspree.io/f/YOUR_FORM_ID',
+    //   method: 'post',
+    //   headers: {
+    //     'Accept': 'application/json'
+    //   },
+    //   data: {
+    //     email: studentInfo.email,
+    //     message: `Hello!\n It's your time to go the counter ${}`
+    //   }
+    // }).then((response) => { console.log(response); })
 
     console.log(`Successfully called student ${studentId}`)
   } catch (error) {

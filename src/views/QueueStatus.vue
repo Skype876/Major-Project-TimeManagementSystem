@@ -15,8 +15,8 @@
     <div class="p-6">
       <div class="flex justify-between">
         <div class="text-center">
-          <p class="text-sm font-medium text-muted-foreground">Estimated Wait Time</p>
-          <p class="text-2xl font-bold">{{ props.estimatedTime }} min</p>
+          <p class="text-sm font-medium text-muted-foreground">Ticket Number</p>
+          <p class="text-2xl font-bold">{{ props.ticketNumber || '--' }}</p>
         </div>
         <div class="text-center">
           <p class="text-sm font-medium text-muted-foreground">Teller Desk</p>
@@ -31,7 +31,8 @@
 const props = defineProps({
   position: Number,
   estimatedTime: Number,
-  tellerDesk: Number
+  tellerDesk: Number,
+  ticketNumber: Number,
 })
 
 
