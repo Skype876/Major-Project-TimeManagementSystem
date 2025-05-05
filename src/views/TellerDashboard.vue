@@ -223,7 +223,7 @@ const resetCurrentStudent = () => {
 }
 
 const updateCurrentStudent = (studentData) => {
-  console.debug('Updating current student with:', studentData)
+  console.log('Updating current student with:', studentData)
 
   currentStudent.studentId = studentData.id
   currentStudent.name = studentData.name
@@ -244,7 +244,7 @@ const handleServiceAction = async (action, errorMessage) => {
   }
 
   try {
-    const endpoint = `/students/${currentStudent.studentId}/${action}`
+    const endpoint = `/students/${currentStudent.id_num}/${action}`
     const response = await api.put(endpoint)
 
     if (!SUCCESS_STATUS_CODES.includes(response.status)) {

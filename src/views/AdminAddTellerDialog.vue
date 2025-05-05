@@ -109,6 +109,7 @@ import { api } from '@/services/api'
 
 const form = ref({
   user_id: 0,
+  id_num: 0,
   username: ' ',
   f_name: ' ',
   l_name: '',
@@ -134,6 +135,7 @@ const handleClose = () => {
 
 const handleSubmit = (e) => {
   e.preventDefault() // Prevent form refresh
+  form.value.id_num = form.value.user_id
   console.log('Form submitted:', form.value)
   api
     .post(

@@ -32,7 +32,7 @@ const props = defineProps({
   position: Number,
   estimatedTime: Number,
   tellerDesk: Number,
-  ticketNumber: Number,
+  ticketNumber: String,
 })
 
 

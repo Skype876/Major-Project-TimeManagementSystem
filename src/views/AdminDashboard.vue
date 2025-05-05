@@ -1,4 +1,3 @@
-// AdminDashboard.vue
 <template>
   <div class="flex min-h-screen flex-col">
     <header class="sticky top-0 z-10 border-b bg-blue-600 text-white">
@@ -17,7 +16,7 @@
             <Download class="h-4 w-4" />
             Report
           </button>
-          <div v-if="reportState.showExportMenu"
+          <div v-if="showExportMenu"
             class="fixed top-16 right-4 rounded-md shadow-lg bg-popover text-popover-foreground z-50 p-8 space-y-4 w-80"
             @click.stop>
             <div>
@@ -31,10 +30,10 @@
             </div>
             <div>
               <label class="block mb-1 font-semibold">Date</label>
-              <input type="date" v-model="reportState.selectedDate" class="w-full p-2 border rounded" />
+              <input type="date" v-model="selectedDate" class="w-full p-2 border rounded" />
             </div>
             <div class="flex justify-between">
-              <button @click="reportState.showExportMenu = false" class="px-3 py-1 rounded bg-gray-300 hover:bg-gray-400">
+              <button @click="showExportMenu = false" class="px-3 py-1 rounded bg-gray-300 hover:bg-gray-400">
                 Cancel
               </button>
               <button @click="generateReport" class="px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700">
@@ -196,7 +195,7 @@
           </div>
         </div>
         <!-- New report display section -->
-        <div v-if="reportState.isGenerated"
+        <div v-if="isReportGenerated"
           class="fixed inset-0 backdrop-blur-sm bg-transparent flex justify-center items-center z-50 p-4"
           @click.self="closeReportMenu">
           <div class="bg-white rounded-lg shadow-lg max-w-[90vw] w-full max-h-[90vh] overflow-auto p-6 space-y-6">
@@ -349,11 +348,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick, watch } from 'vue'
-import { Download, Plus } from 'lucide-vue-next'
-import AdminTellerTable from '@/views/AdminTellerTable.vue'
-import AdminAddTellerDialog from '@/views/AdminAddTellerDialog.vue'
-import { api, authApi } from '@/services/api'
+import { ref, onMounted, computed, nextTick } from 'vue'
+import { Clock, Bell, User, LogOut, Download, Plus } from 'lucide-vue-next'
 import { Bar } from 'vue-chartjs'
 import {
   Chart as ChartJS,
@@ -364,433 +360,467 @@ import {
   CategoryScale,
   LinearScale,
 } from 'chart.js'
+import AdminTellerTable from './AdminTellerTable.vue'
+import AdminQueueStats from './AdminQueueStats.vue'
+import AdminAddTellerDialog from './AdminAddTellerDialog.vue'
+import { api } from '@/services/api'
 import * as XLSX from 'xlsx'
 
-// Constants
-const REPORT_TYPES = {
-  DAILY: 'daily',
-  WEEKLY: 'weekly',
-  MONTHLY: 'monthly',
-  ANNUAL: 'annual'
-}
-
-// ChartJS setup (static registration)
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-// Base chart configuration
-const baseChartOptions = {
+const isUserMenuOpen = ref(false)
+const isAddTellerOpen = ref(false)
+const activeTab = ref('tellers')
+
+const totalServiceReps = ref(0)
+const activeServiceReps = ref(0)
+const averageServiceTimeMinutes = ref(0)
+const totalStudentsJoinedToday = ref(0)
+const peakHours = ref([])
+const topIssue = ref('')
+const topIssuePercentage = ref(0)
+
+const chartData = ref({
+  labels: [],
+  datasets: [
+    {
+      label: 'People Joined',
+      backgroundColor: '#3b82f6',
+      data: [],
+    },
+  ],
+})
+
+const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
-    legend: { position: 'top' },
-    title: { display: true }
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Queue Peak Hours',
+    },
+  },
+}
+
+const showExportMenu = ref(false)
+const selectedReportType = ref('daily')
+const selectedDate = ref(new Date().toISOString().substr(0, 10))
+const reportData = ref(null)
+
+// Added studentLevels reactive ref and chart data
+const studentLevels = ref([])
+
+const studentLevelsChartData = ref({
+  labels: [],
+  datasets: [
+    {
+      label: 'Student Levels',
+      backgroundColor: ['#3b82f6', '#f87171', '#34d399', '#fbbf24', '#a78bfa'],
+      data: [],
+    },
+  ],
+})
+
+const studentLevelsChartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { position: 'right' },
+    title: { display: true, text: 'Student Levels' },
+  },
+}
+
+const exportMenuAlignRight = ref(true)
+const isReportGenerated = ref(false)
+
+function toggleExportMenu() {
+  showExportMenu.value = !showExportMenu.value
+  if (!showExportMenu.value) {
+    isReportGenerated.value = false
+  }
+  if (showExportMenu.value) {
+    nextTick(() => {
+      const menu = document.querySelector('.export-menu')
+      if (menu) {
+        const rect = menu.getBoundingClientRect()
+        if (rect.right > window.innerWidth) {
+          exportMenuAlignRight.value = false
+        } else {
+          exportMenuAlignRight.value = true
+        }
+      }
+    })
   }
 }
 
-// Reactive state
-const state = {
-  // UI State
-  ui: ref({
-    isUserMenuOpen: false,
-    isAddTellerOpen: false,
-    activeTab: 'tellers',
-    showExportMenu: false,
-    isLoading: false
-  }),
-
-  // Stats data
-  stats: ref({
-    totalServiceReps: 0,
-    activeServiceReps: 0,
-    averageServiceTimeMinutes: 0,
-    totalStudentsJoinedToday: 0,
-    peakHours: [],
-    topIssue: '',
-    topIssuePercentage: 0,
-    studentLevels: []
-  }),
-
-  // Report state
-  report: ref({
-    selectedType: REPORT_TYPES.DAILY,
-    selectedDate: new Date().toISOString().slice(0, 10),
-    data: null,
-    isGenerated: false,
-    alignRight: true
-  })
-}
-
-// Chart data refs
-const chartData = {
-  peakHours: ref({
-    labels: [],
-    datasets: [{
-      label: 'People Joined',
-      backgroundColor: '#3b82f6',
-      data: []
-    }]
-  }),
-  studentLevels: ref({
-    labels: [],
-    datasets: [{
-      label: 'Student Levels',
-      backgroundColor: ['#3b82f6', '#f87171', '#34d399', '#fbbf24', '#a78bfa'],
-      data: []
-    }]
-  }),
-  issuesSummary: ref({
-    labels: [],
-    datasets: [{
-      label: 'Issue Percentage',
-      backgroundColor: ['#3b82f6', '#f87171', '#34d399', '#fbbf24', '#a78bfa'],
-      data: []
-    }]
-  }),
-  detailedIssueStatus: ref({
-    labels: [],
-    datasets: [
-      {
-        label: 'Completed Count',
-        backgroundColor: '#34d399',
-        data: []
-      },
-      {
-        label: 'Not Completed Count',
-        backgroundColor: '#f87171',
-        data: []
+async function generateReport() {
+  if (!selectedDate.value) {
+    alert('Please select a date')
+    return
+  }
+  try {
+    const response = await api.get(
+      `/users/reports?type=${selectedReportType.value}&date=${selectedDate.value}`,
+    )
+    if (response.status != 200 && response.status != 201) {
+      throw new Error('Failed to fetch report')
+    }
+    const data = await response.data
+    if (!data) {
+      alert('No data found for the selected report')
+      return
+    }
+    console.log('Fetched report data:', data)
+    // Relax validation: allow missing fields but warn
+    if (
+      (data.peakHours && !Array.isArray(data.peakHours)) ||
+      (data.issuesSummary && !Array.isArray(data.issuesSummary)) ||
+      (data.detailedIssueStatusSummary && !Array.isArray(data.detailedIssueStatusSummary))
+    ) {
+      alert('Report data has malformed fields')
+      return
+    }
+    // Fallback for renamed detailedIssueStatusSummary field
+    if (!data.detailedIssueStatusSummary) {
+      if (data.detailedIssueSummary && Array.isArray(data.detailedIssueSummary)) {
+        data.detailedIssueStatusSummary = data.detailedIssueSummary
+      } else if (data.issueStatusSummary && Array.isArray(data.issueStatusSummary)) {
+        data.detailedIssueStatusSummary = data.issueStatusSummary
+      } else {
+        data.detailedIssueStatusSummary = []
       }
-    ]
-  })
+    }
+    reportData.value = data
+    console.log('Setting isReportGenerated to true')
+    isReportGenerated.value = true
+    updateReportCharts(data)
+  } catch (error) {
+    alert('Error generating report: ' + error.message)
+  }
 }
 
-// Computed properties
-const computedProps = {
-  exportMenuClasses: computed(() => {
-    const baseClasses = [
+function exportReportExcel() {
+  if (!reportData.value) {
+    alert('No report data to export')
+    return
+  }
+  const wb = XLSX.utils.book_new()
+
+  // Summary sheet
+  const summaryData = [
+    ['Summary', 'Value'],
+    ['Total Service Representatives', reportData.value.totalServiceReps],
+    ['Active Service Representatives', reportData.value.activeServiceReps],
+    ['Average Service Time (minutes)', reportData.value.averageServiceTimeMinutes],
+    ['Total Students Joined Today', reportData.value.totalStudentsJoinedToday],
+    ['Top Issue', reportData.value.topIssue],
+    ['Top Issue Percentage', reportData.value.topIssuePercentage],
+  ]
+  const wsSummary = XLSX.utils.aoa_to_sheet(summaryData)
+  XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary')
+
+  // Service Representatives sheet
+  const serviceRepsData = [
+    ['Name', 'Email', 'Status', 'Students Served', 'Avg. Wait Time (min)'],
+    ...reportData.value.serviceReps.map((rep) => [
+      rep.name,
+      rep.email,
+      rep.status,
+      rep.studentsServed,
+      rep.averageWaitTimeMinutes,
+    ]),
+  ]
+  const wsServiceReps = XLSX.utils.aoa_to_sheet(serviceRepsData)
+  XLSX.utils.book_append_sheet(wb, wsServiceReps, 'Service Representatives')
+
+  // Issues Summary sheet
+  const issuesSummaryData = [
+    ['Issue Name', 'Count', 'Percentage'],
+    ...reportData.value.issuesSummary.map((issue) => [
+      issue.issueName,
+      issue.count,
+      issue.percentage,
+    ]),
+  ]
+  const wsIssuesSummary = XLSX.utils.aoa_to_sheet(issuesSummaryData)
+  XLSX.utils.book_append_sheet(wb, wsIssuesSummary, 'Issues Summary')
+
+  // Detailed Issue Status Summary sheet
+  const detailedIssueStatusData = [
+    [
+      'Issue Name',
+      'Completed Count',
+      'Not Completed Count',
+      'Total Count',
+      'Percentage Completed',
+      'Percentage Not Completed',
+    ],
+    ...reportData.value.detailedIssueStatusSummary.map((detail) => [
+      detail.issueName,
+      detail.completedCount,
+      detail.notCompletedCount,
+      detail.totalCount,
+      detail.percentageCompleted,
+      detail.percentageNotCompleted,
+    ]),
+  ]
+  const wsDetailedIssueStatus = XLSX.utils.aoa_to_sheet(detailedIssueStatusData)
+  XLSX.utils.book_append_sheet(wb, wsDetailedIssueStatus, 'Detailed Issue Status')
+
+  // Student Levels sheet
+  const studentLevelsData = [
+    ['Student Level', 'Count', 'Percentage'],
+    ...((reportData.value.studentLevels && Array.isArray(reportData.value.studentLevels))
+      ? reportData.value.studentLevels.map((level) => [
+        level.studentLevel,
+        level.count,
+        level.percentage,
+      ])
+      : []),
+  ]
+  const wsStudentLevels = XLSX.utils.aoa_to_sheet(studentLevelsData)
+  XLSX.utils.book_append_sheet(wb, wsStudentLevels, 'Student Levels')
+
+  XLSX.writeFile(wb, 'report.xlsx')
+}
+
+const exportMenuClasses = computed(() => {
+  if (isReportGenerated.value) {
+    return [
+      'fixed',
+      'top-1/2',
+      'left-1/2',
+      'transform',
+      '-translate-x-1/2',
+      '-translate-y-1/2',
       'rounded-md',
       'shadow-lg',
       'bg-popover',
       'text-popover-foreground',
       'z-50',
       'p-4',
-      'max-h-[600px]',
-      'overflow-auto',
       'space-y-4',
       'w-80',
-      'export-menu'
+      'export-menu',
+      'flex',
+      'flex-col',
+      'justify-between',
     ]
+  }
+  return [
+    'absolute',
+    'mt-2',
+    'rounded-md',
+    'shadow-lg',
+    'bg-popover',
+    'text-popover-foreground',
+    'z-50',
+    'p-4',
+    'space-y-4',
+    'w-80',
+    exportMenuAlignRight.value ? 'right-0' : 'left-0',
+    'export-menu',
+  ]
+})
 
-    if (state.report.value.isGenerated) {
-      return [
-        ...baseClasses,
-        'fixed',
-        'top-1/2',
-        'left-1/2',
-        'transform',
-        '-translate-x-1/2',
-        '-translate-y-1/2',
-        'flex',
-        'flex-col',
-        'justify-between',
-        'h-[600px]'
-      ]
-    }
+const closeReportMenu = () => {
+  console.log('closeReportMenu called')
+  reportData.value = null
+  isReportGenerated.value = false
+  showExportMenu.value = false
+  activeTab.value = 'tellers' // Reset to default tab on close
 
-    return [
-      ...baseClasses,
-      'absolute',
-      'mt-2',
-      state.report.value.alignRight ? 'right-0' : 'left-0'
-    ]
-  }),
+  // Reset chart data to empty to avoid rendering errors
+  peakHoursChartData.value.labels = []
+  peakHoursChartData.value.datasets[0].data = []
 
-  reportDateDescription: computed(() => {
-    if (!state.report.value.selectedDate) return ''
-    const date = new Date(state.report.value.selectedDate)
-    const year = date.getFullYear()
-    const month = date.toLocaleString('default', { month: 'long' })
-    const day = date.getDate()
+  issuesSummaryChartData.value.labels = []
+  issuesSummaryChartData.value.datasets[0].data = []
 
-    switch (state.report.value.selectedType) {
-      case REPORT_TYPES.DAILY: return `for ${month} ${day}, ${year}`
-      case REPORT_TYPES.WEEKLY: return `for the week of ${month} ${day}, ${year}`
-      case REPORT_TYPES.MONTHLY: return `for the month of ${month} ${year}`
-      case REPORT_TYPES.ANNUAL: return `for the year of ${year}`
-      default: return ''
-    }
-  }),
-
-  reportTypeDescription: computed(() => {
-    switch (state.report.value.selectedType) {
-      case REPORT_TYPES.DAILY: return 'Daily Report'
-      case REPORT_TYPES.WEEKLY: return 'Weekly Report'
-      case REPORT_TYPES.MONTHLY: return 'Monthly Report'
-      case REPORT_TYPES.ANNUAL: return 'Annual Report'
-      default: return ''
-    }
+  nextTick(() => {
+    // Additional cleanup if needed
   })
 }
 
-// Methods
-const methods = {
-  formatHour(hour) {
-    const h = parseInt(hour)
-    if (h === 0) return '12 AM'
-    if (h < 12) return `${h} AM`
-    if (h === 12) return '12 PM'
-    return `${h - 12} PM`
+// New reactive refs for report charts
+const peakHoursChartData = ref({
+  labels: [],
+  datasets: [
+    {
+      label: 'People Joined',
+      backgroundColor: '#3b82f6',
+      data: [],
+    },
+  ],
+})
+
+const peakHoursChartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { position: 'top' },
+    title: { display: true, text: 'Peak Hours' },
   },
-
-  async toggleExportMenu() {
-    state.ui.value.showExportMenu = !state.ui.value.showExportMenu
-
-    if (!state.ui.value.showExportMenu) {
-      state.report.value.isGenerated = false
-      return
-    }
-
-    await nextTick()
-    const menu = document.querySelector('.export-menu')
-    if (menu) {
-      const rect = menu.getBoundingClientRect()
-      state.report.value.alignRight = rect.right <= window.innerWidth
-    }
+  scales: {
+    y: { beginAtZero: true },
   },
+}
 
-  closeReportMenu() {
-    state.report.value = {
-      ...state.report.value,
-      data: null,
-      isGenerated: false
-    }
-    state.ui.value.showExportMenu = false
+const issuesSummaryChartData = ref({
+  labels: [],
+  datasets: [
+    {
+      label: 'Issue Percentage',
+      backgroundColor: ['#3b82f6', '#f87171', '#34d399', '#fbbf24', '#a78bfa'],
+      data: [],
+    },
+  ],
+})
+
+const issuesSummaryChartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { position: 'right' },
+    title: { display: true, text: 'Issues Summary' },
   },
+}
 
-  async fetchServiceRepStats() {
-    try {
-      const { data } = await api.get('/users/service-reps')
+const detailedIssueStatusChartData = ref({
+  labels: [],
+  datasets: [
+    {
+      label: 'Completed Count',
+      backgroundColor: '#34d399',
+      data: [],
+    },
+    {
+      label: 'Not Completed Count',
+      backgroundColor: '#f87171',
+      data: [],
+    },
+  ],
+})
 
-      if (!data) {
-        throw new Error('No data received from service reps endpoint')
-      }
-
-      state.stats.value = {
-        ...data,
-        studentLevels: data.studentLevels || []
-      }
-
-      // Update charts
-      this.updateCharts(data)
-    } catch (error) {
-      console.error('Error fetching service reps stats:', error)
-      alert('Failed to load service representative statistics')
-    }
+const detailedIssueStatusChartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { position: 'top' },
+    title: { display: true, text: 'Detailed Issue Status Summary' },
   },
-
-  updateCharts(data) {
-    // Peak Hours chart
-    if (Array.isArray(data.peakHours)) {
-      chartData.peakHours.value = {
-        labels: data.peakHours.map(h => this.formatHour(h.hour)),
-        datasets: [{
-          ...chartData.peakHours.value.datasets[0],
-          data: data.peakHours.map(h => h.count)
-        }]
-      }
-    }
-
-    // Student Levels chart
-    if (Array.isArray(data.studentLevels)) {
-      chartData.studentLevels.value = {
-        labels: data.studentLevels.map(s => s.studentLevel),
-        datasets: [{
-          ...chartData.studentLevels.value.datasets[0],
-          data: data.studentLevels.map(s => s.percentage)
-        }]
-      }
-    }
-
-    // Issues Summary chart
-    if (Array.isArray(data.issuesSummary)) {
-      chartData.issuesSummary.value = {
-        labels: data.issuesSummary.map(i => i.issueName),
-        datasets: [{
-          ...chartData.issuesSummary.value.datasets[0],
-          data: data.issuesSummary.map(i => i.percentage)
-        }]
-      }
-    }
-
-    // Detailed Issue Status chart
-    if (Array.isArray(data.detailedIssueStatusSummary)) {
-      chartData.detailedIssueStatus.value = {
-        labels: data.detailedIssueStatusSummary.map(i => i.issueName),
-        datasets: [
-          {
-            ...chartData.detailedIssueStatus.value.datasets[0],
-            data: data.detailedIssueStatusSummary.map(i => i.completedCount)
-          },
-          {
-            ...chartData.detailedIssueStatus.value.datasets[1],
-            data: data.detailedIssueStatusSummary.map(i => i.notCompletedCount)
-          }
-        ]
-      }
-    }
+  scales: {
+    y: { beginAtZero: true },
   },
+}
 
-  async generateReport() {
-    if (!state.report.value.selectedDate) {
-      alert('Please select a date')
-      return
-    }
+function updateReportCharts(data) {
+  // Peak Hours chart
+  if (Array.isArray(data.peakHours)) {
+    peakHoursChartData.value.labels = data.peakHours.map((h) => formatHour(h.hour))
+    peakHoursChartData.value.datasets[0].data = data.peakHours.map((h) => h.count)
+  } else {
+    peakHoursChartData.value.labels = []
+    peakHoursChartData.value.datasets[0].data = []
+  }
 
-    state.ui.value.isLoading = true
+  // Issues Summary chart
+  if (Array.isArray(data.issuesSummary)) {
+    issuesSummaryChartData.value.labels = data.issuesSummary.map((i) => i.issueName)
+    issuesSummaryChartData.value.datasets[0].data = data.issuesSummary.map((i) => i.percentage)
+  } else {
+    issuesSummaryChartData.value.labels = []
+    issuesSummaryChartData.value.datasets[0].data = []
+  }
 
-    try {
-      const response = await api.get(
-        `/reports?type=${state.report.value.selectedType}&date=${state.report.value.selectedDate}`
-      )
-
-      if (response.status !== 200 && response.status !== 201) {
-        throw new Error('Failed to fetch report')
-      }
-
-      const data = response.data
-
-      if (!data) {
-        alert('No data found for the selected report')
-        return
-      }
-
-      // Handle field name variations
-      if (!data.detailedIssueStatusSummary) {
-        if (data.detailedIssueSummary && Array.isArray(data.detailedIssueSummary)) {
-          data.detailedIssueStatusSummary = data.detailedIssueSummary
-        } else if (data.issueStatusSummary && Array.isArray(data.issueStatusSummary)) {
-          data.detailedIssueStatusSummary = data.issueStatusSummary
-        } else {
-          data.detailedIssueStatusSummary = []
-        }
-      }
-
-      state.report.value.data = data
-      state.report.value.isGenerated = true
-      this.updateCharts(data)
-    } catch (error) {
-      console.error('Report generation error:', error)
-      alert(`Error generating report: ${error.message}`)
-    } finally {
-      state.ui.value.isLoading = false
-    }
-  },
-
-  exportReportExcel() {
-    if (!state.report.value.data) {
-      alert('No report data to export')
-      return
-    }
-
-    const wb = XLSX.utils.book_new()
-    const reportData = state.report.value.data
-
-    // Helper function to create worksheet from array of arrays
-    const createWorksheet = (data, sheetName) => {
-      const ws = XLSX.utils.aoa_to_sheet(data)
-      XLSX.utils.book_append_sheet(wb, ws, sheetName)
-    }
-
-    // Summary sheet
-    createWorksheet([
-      ['Summary', 'Value'],
-      ['Total Service Representatives', reportData.totalServiceReps],
-      ['Active Service Representatives', reportData.activeServiceReps],
-      ['Average Service Time (minutes)', reportData.averageServiceTimeMinutes],
-      ['Total Students Joined Today', reportData.totalStudentsJoinedToday],
-      ['Top Issue', reportData.topIssue],
-      ['Top Issue Percentage', reportData.topIssuePercentage]
-    ], 'Summary')
-
-    // Service Representatives sheet
-    createWorksheet([
-      ['Name', 'Email', 'Status', 'Students Served', 'Avg. Wait Time (min)'],
-      ...(reportData.serviceReps || []).map(rep => [
-        rep.name,
-        rep.email,
-        rep.status,
-        rep.studentsServed,
-        rep.averageWaitTimeMinutes
-      ])
-    ], 'Service Representatives')
-
-    // Issues Summary sheet
-    createWorksheet([
-      ['Issue Name', 'Count', 'Percentage'],
-      ...(reportData.issuesSummary || []).map(issue => [
-        issue.issueName,
-        issue.count,
-        issue.percentage
-      ])
-    ], 'Issues Summary')
-
-    // Detailed Issue Status Summary sheet
-    createWorksheet([
-      [
-        'Issue Name',
-        'Completed Count',
-        'Not Completed Count',
-        'Total Count',
-        'Percentage Completed',
-        'Percentage Not Completed'
-      ],
-      ...(reportData.detailedIssueStatusSummary || []).map(detail => [
-        detail.issueName,
-        detail.completedCount,
-        detail.notCompletedCount,
-        detail.totalCount,
-        detail.percentageCompleted,
-        detail.percentageNotCompleted
-      ])
-    ], 'Detailed Issue Status')
-
-    // Student Levels sheet
-    createWorksheet([
-      ['Student Level', 'Count', 'Percentage'],
-      ...((reportData.studentLevels && Array.isArray(reportData.studentLevels))
-        ? reportData.studentLevels.map(level => [
-          level.studentLevel,
-          level.count,
-          level.percentage
-        ])
-        : [])
-    ], 'Student Levels')
-
-    XLSX.writeFile(wb, 'report.xlsx')
-  },
-
-  async logout() {
-    try {
-      await authApi.post('/logout')
-      // Clear all auth related data
-      ['token', 'email', 'user'].forEach(key => localStorage.removeItem(key))
-      // Redirect to login page
-      window.location.href = '/login'
-    } catch (error) {
-      console.error('Logout failed:', error)
-      alert('Logout failed. Please try again.')
-    }
+  // Detailed Issue Status chart
+  if (Array.isArray(data.detailedIssueStatusSummary)) {
+    detailedIssueStatusChartData.value.labels = data.detailedIssueStatusSummary.map(
+      (i) => i.issueName,
+    )
+    detailedIssueStatusChartData.value.datasets[0].data = data.detailedIssueStatusSummary.map(
+      (i) => i.completedCount,
+    )
+    detailedIssueStatusChartData.value.datasets[1].data = data.detailedIssueStatusSummary.map(
+      (i) => i.notCompletedCount,
+    )
+  } else {
+    detailedIssueStatusChartData.value.labels = []
+    detailedIssueStatusChartData.value.datasets[0].data = []
+    detailedIssueStatusChartData.value.datasets[1].data = []
   }
 }
 
-// Watch for report data changes
-watch(() => state.report.value.data, (newData) => {
+function formatHour(hour) {
+  const h = parseInt(hour)
+  if (h === 0) return '12 AM'
+  if (h < 12) return `${h} AM`
+  if (h === 12) return '12 PM'
+  return `${h - 12} PM`
+}
+
+// Watch reportData to update charts when new data arrives
+import { watch } from 'vue'
+watch(reportData, (newData) => {
   if (newData) {
-    methods.updateCharts(newData)
+    console.log('Full fetched report data:', newData)
+    console.log('detailedIssueStatusSummary:', newData.detailedIssueStatusSummary)
+    updateReportCharts(newData)
+    totalServiceReps.value = newData.totalServiceReps
+    activeServiceReps.value = newData.activeServiceReps
+    averageServiceTimeMinutes.value = newData.averageServiceTimeMinutes
+    totalStudentsJoinedToday.value = newData.totalStudentsJoinedToday
+    peakHours.value = newData.peakHours
+    topIssue.value = newData.topIssue
+    topIssuePercentage.value = newData.topIssuePercentage
+    studentLevels.value = newData.studentLevels || []
+
+    // Update studentLevels chart data
+    if (Array.isArray(studentLevels.value)) {
+      studentLevelsChartData.value.labels = studentLevels.value.map((s) => s.studentLevel)
+      studentLevelsChartData.value.datasets[0].data = studentLevels.value.map((s) => s.percentage)
+    } else {
+      studentLevelsChartData.value.labels = []
+      studentLevelsChartData.value.datasets[0].data = []
+    }
   }
 })
 
-// Lifecycle hooks
-onMounted(() => {
-  methods.fetchServiceRepStats()
+const reportDateDescription = computed(() => {
+  if (!selectedDate.value) return ''
+  const date = new Date(selectedDate.value)
+  const year = date.getFullYear()
+  const month = date.toLocaleString('default', { month: 'long' })
+  const day = date.getDate()
+  switch (selectedReportType.value) {
+    case 'daily':
+      return `for ${month} ${day}, ${year}`
+    case 'weekly':
+      return `for the week of ${month} ${day}, ${year}`
+    case 'monthly':
+      return `for the month of ${month} ${year}`
+    case 'annual':
+      return `for the year of ${year}`
+    default:
+      return ''
+  }
+})
+
+const reportTypeDescription = computed(() => {
+  switch (selectedReportType.value) {
+    case 'daily':
+      return 'Daily Report'
+    case 'weekly':
+      return 'Weekly Report'
+    case 'monthly':
+      return 'Monthly Report'
+    case 'annual':
+      return 'Annual Report'
+    default:
+      return ''
+  }
 })
 </script>

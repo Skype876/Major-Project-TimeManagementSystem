@@ -312,7 +312,8 @@ const queueData = ref({
   collegeFaculty: '',
   studentLevel: '',
   email: '',
-  phone: ''
+  phone: '',
+  ticketNumber: ''
 })
 
 // Computed properties
@@ -329,9 +330,12 @@ const initializeWebSocket = (id, token) => {
 
     websocket.value.onopen = () => console.log('WebSocket connection established')
 
+    console.log("hello")
+
     websocket.value.onmessage = (event) => {
       try {
         const [data] = JSON.parse(event.data)
+        console.log(event.data);
         updateQueueData(data)
       } catch (error) {
         console.error('Error processing WebSocket message:', error)
@@ -359,8 +363,11 @@ const updateQueueData = (data) => {
     collegeFaculty: data.student.collegeFaculty || '',
     studentLevel: data.student.studentLevel || '',
     email: data.student.email || '',
-    phone: data.student.phone || ''
+    phone: data.student.phone || '',
+    ticketNumber: data.student.ticketNumber
   }
+  console.log(queueData.value);
+  
 }
 
 const loadSession = () => {
@@ -382,7 +389,7 @@ const handleJoinQueue = async () => {
       ...data,
       student: {
         name: data.name,
-        id_num: data.idNum,
+        id_num: data.id,
         typeOfIssue: data.typeOfIssue,
         collegeFaculty: data.collegeFaculty,
         studentLevel: data.studentLevel,
@@ -392,6 +399,8 @@ const handleJoinQueue = async () => {
       position: data.queuePosition,
       estimatedWaitTime: data.estimatedWaitTime
     })
+
+    
 
     // Persist only necessary session data
     localStorage.setItem(SESSION_KEY, JSON.stringify({
