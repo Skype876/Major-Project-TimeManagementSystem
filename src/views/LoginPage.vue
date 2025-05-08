@@ -156,7 +156,12 @@ async function login(role) {
     let password = ''
 
     try {
-        const response = await authApi.post('auth/login', { email, password })
+        const email = tellerEmail.value || adminEmail.value;
+        const password = adminPassword.value || tellerPassword.value;
+
+        const payload = { email, password };
+
+        const response = await authApi.post('auth/login', payload);
 
         if (response.status != 200) {
             errorMessage.value = 'Login failed'
