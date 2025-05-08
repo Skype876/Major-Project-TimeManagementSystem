@@ -154,13 +154,6 @@ async function login(role) {
     errorMessage.value = ''
     let email = ''
     let password = ''
-    if (role === 'teller') {
-        email = tellerEmail.value
-        password = tellerPassword.value
-    } else if (role === 'admin') {
-        email = adminEmail.value
-        password = adminPassword.value
-    }
 
     try {
         const response = await authApi.post('auth/login', { email, password })
@@ -175,9 +168,9 @@ async function login(role) {
         localStorage.setItem('token', data.token)
         localStorage.setItem('email', data.email)
         // Redirect based on role
-        if (role === 'teller') {
+        if (data.role === 'teller' || data.role == "SUPER_ADMIN") {
             router.push('/teller')
-        } else if (role === 'admin') {
+        } else if (data.role === 'admin' || data.role == "SUPER_ADMIN") {
             router.push('/admin')
         }
     } catch (error) {

@@ -115,8 +115,9 @@ const form = ref({
   l_name: '',
   phone: 0,
   email: '',
+  desk_num: '',
   password: '',
-  user_type: 'student',
+  user_type: 'teller',
 })
 // console.log(form.value)
 const props = defineProps({
