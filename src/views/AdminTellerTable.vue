@@ -106,7 +106,7 @@ onMounted(async () => {
             id: rep.id,
             name: rep.name,
             email: rep.email,
-            desk: '', // No desk info in response
+            desk: rep.desk_num != null ? rep.desk_num : '', // Map desk_num from response
             status: rep.status,
             studentsServed: rep.studentsServed,
             avgServiceTime: rep.averageWaitTimeMinutes ? `${rep.averageWaitTimeMinutes} min` : '',
