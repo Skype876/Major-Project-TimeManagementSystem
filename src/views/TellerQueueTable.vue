@@ -68,6 +68,9 @@ const selectedStudent = ref(null)
 const WEBSOCKET_URL = 'wss://student-queue-f9fmhac6gcgpf4dd.canadacentral-01.azurewebsites.net/queue/updates'
 const STUDENT_ENDPOINT = '/students/byID'
 const STUDENT_STATUS_ENDPOINT = '/students'
+const TELLER_DESK_NUM = parseInt(localStorage.getItem("desk_num") ?? "0", 10);
+
+
 
 // Helper function to transform queue data
 const transformQueueData = (data) => {
@@ -112,7 +115,7 @@ const callStudent = async (studentId) => {
     // Fetch student info
     const [studentResponse, statusResponse] = await Promise.all([
       api.get(`${STUDENT_ENDPOINT}/${studentId}`),
-      api.put(`${STUDENT_STATUS_ENDPOINT}/${studentId}/in-progress`)
+      api.put(`${STUDENT_STATUS_ENDPOINT}/${studentId}/in-progress?desk_num=${TELLER_DESK_NUM}`)
     ])
 
     if (studentResponse.status != 200 || statusResponse.status != 200) {

@@ -172,6 +172,7 @@ async function login(role) {
         // Store token in localStorage
         localStorage.setItem('token', data.token)
         localStorage.setItem('email', data.email)
+        localStorage.setItem('desk_num', data.desk_num)
         // Redirect based on role
         if (data.role === 'teller' || data.role == "SUPER_ADMIN") {
             router.push('/teller')
