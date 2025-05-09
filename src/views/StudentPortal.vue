@@ -201,7 +201,7 @@
                       </div>
                       <div class="space-y-2">
                         <p class="text-sm font-medium text-muted-foreground">Estimated Wait Time</p>
-                        <p class="text-2xl font-bold">{{ queueData.estimatedTime }} minutes</p>
+                        <p class="text-2xl font-bold">{{ minutes }} minutes</p>
                       </div>
                     </div>
                     <div class="space-y-2">

@@ -46,6 +46,31 @@
             <Plus class="h-4 w-4" />
             Add Teller
           </button>
+          <div class="relative">
+            <button @click="isUserMenuOpen = !isUserMenuOpen"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-white h-9 px-4 py-2 flex items-center gap-2 mr-2">
+              <User class="h-4 w-4" />
+              <span>Teller Name</span>
+            </button>
+            <div v-if="isUserMenuOpen"
+              class="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-popover text-popover-foreground z-50">
+              <div class="py-1 px-2 text-sm font-medium">My Account</div>
+              <div class="h-px bg-muted my-1"></div>
+              <button
+                class="flex w-full items-center px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm">Profile</button>
+              <button
+                class="flex w-full items-center px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm">Settings</button>
+              <div class="h-px bg-muted my-1"></div>
+              <router-link to="/">
+                <button
+                  class="flex w-full items-center px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm"
+                  @click="logout()">
+                  <LogOut class="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </button>
+              </router-link>
+            </div>
+          </div>
         </div>
       </div>
     </header>
@@ -363,7 +388,7 @@ import {
 import AdminTellerTable from './AdminTellerTable.vue'
 import AdminQueueStats from './AdminQueueStats.vue'
 import AdminAddTellerDialog from './AdminAddTellerDialog.vue'
-import { api } from '@/services/api'
+import { api, authApi } from '@/services/api'
 import * as XLSX from 'xlsx'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
@@ -823,4 +848,17 @@ const reportTypeDescription = computed(() => {
       return ''
   }
 })
+
+const logout = async () => {
+  try {
+    await authApi.post("/logout")
+    localStorage.removeItem('token')
+    localStorage.removeItem('email')
+    localStorage.removeItem('user')
+    // Consider redirecting to login page after logout
+  } catch (error) {
+    console.error('Logout failed:', error)
+    // Consider adding user-facing error notification here
+  }
+}
 </script>
