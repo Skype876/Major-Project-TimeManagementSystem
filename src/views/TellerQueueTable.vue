@@ -23,15 +23,15 @@
           </tr>
         </thead>
         <tbody class="[&_tr:last-child]:border-0">
-          <tr v-for="student in queueData" :key="student.id_num"
+          <tr v-for="student in queueData" :key="student.idNum"
             class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-            <td class="p-4 align-middle font-medium">{{ student.queuePosition }}</td>
+            <td class="p-4 align-middle font-medium">{{ student.position }}</td>
             <td class="p-4 align-middle">{{ student.name }}</td>
-            <td class="p-4 align-middle">{{ student.id_num }}</td>
+            <td class="p-4 align-middle">{{ student.idNum }}</td>
             <td class="p-4 align-middle">{{ student.typeOfIssue }}</td>
             <td class="p-4 align-middle">{{ student.currentWaitTime }} min</td>
             <td class="p-4 align-middle text-right">
-              <button @click="callStudent(student.id_num)"
+              <button @click="callStudent(student.idNum)"
                 class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-9 px-3">
                 Call
               </button>
@@ -44,7 +44,7 @@
       <h2 class="text-lg font-semibold mb-2">Selected Student Information</h2>
       <p><strong>Name:</strong> {{ selectedStudent.name }}</p>
       <p><strong>ID:</strong> {{ selectedStudent.id }}</p>
-      <p><strong>Student ID Number:</strong> {{ selectedStudent.id_num }}</p>
+      <p><strong>Student ID Number:</strong> {{ selectedStudent.idNum }}</p>
       <p><strong>Faculty:</strong> {{ selectedStudent.collegeFaculty || 'Unknown' }}</p>
       <p><strong>Issue Type:</strong> {{ selectedStudent.typeOfIssue }}</p>
       <p><strong>Email:</strong> {{ selectedStudent.email || 'N/A' }}</p>
@@ -55,58 +55,67 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { api } from '@/services/api'
+import axios from 'axios'
 
 const emit = defineEmits('student-info')
 // Reactive state
 const queueData = ref([])
-const socket = ref(null)
 const selectedStudent = ref(null)
-
+let eventSource = null;
+const reconnectInterval = 5000
 // Constants
-const WEBSOCKET_URL = 'wss://student-queue-f9fmhac6gcgpf4dd.canadacentral-01.azurewebsites.net/queue/updates'
 const STUDENT_ENDPOINT = '/students/byID'
 const STUDENT_STATUS_ENDPOINT = '/students'
 const TELLER_DESK_NUM = parseInt(localStorage.getItem("desk_num") ?? "0", 10);
 
+const connectSse = () => {
+  console.log("Connecting to SSE...");
+  eventSource = new EventSource(`http://student-queue-f9fmhac6gcgpf4dd.canadacentral-01.azurewebsites.net/updates`);
+  // eventSource = new EventSource(`http://localhost:8080/updates`);
 
+  eventSource.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      console.log("Received message:", data);
+
+      if (!("status" in data)) {
+        queueData.value = transformQueueData(data);
+      }
+    } catch (error) {
+      console.error("Error parsing SSE data:", error);
+    }
+  };
+
+  eventSource.onerror = () => {
+    console.error("Error in SSE connection");
+    eventSource.close();
+    reconnectSSE();
+  };
+};
+
+const reconnectSSE = () => {
+  console.log(`Reconnecting in ${reconnectInterval / 1000} seconds...`);
+  setTimeout(() => {
+    connectSse();
+  }, reconnectInterval);
+};
 
 // Helper function to transform queue data
 const transformQueueData = (data) => {
   return data.map(item => ({
-    // Spread all student properties
-    ...item.student,
-    // Spread additional queue-related properties
+    currentWaitTime: item.currentWaitTime / 60000,
+    idNum: item.idNum,
+    name: item.name,
+    position: item.position,
+    studentId: item.studentId,
+    typeOfIssue: item.typeOfIssue,
     estimatedWaitTime: item.estimatedWaitTime,
     queuePosition: item.queuePosition,
     timestamp: item.timestamp || Date.now(), // Fallback to current time if missing
-    eventType: item.event // Keep the original event type if needed
+    // eventType: item.event // Keep the original event type if needed
   }))
-}
-
-// WebSocket handlers
-const setupWebSocket = () => {
-  socket.value = new WebSocket(WEBSOCKET_URL)
-
-  socket.value.onopen = () => {
-    console.log('Connected to queue WebSocket')
-  }
-
-  socket.value.onmessage = (event) => {
-    try {
-      const data = JSON.parse(event.data)
-      // Handle both single object and array cases
-      const processedData = Array.isArray(data) ? data : [data]
-      queueData.value = transformQueueData(processedData)
-    } catch (error) {
-      console.error('Error parsing WebSocket message:', error)
-    }
-  }
-
-  socket.value.onerror = (error) => {
-    console.error('WebSocket error:', error)
-  }
 }
 
 // Student actions
@@ -137,17 +146,17 @@ const callStudent = async (studentId) => {
       estimatedWaitTime: studentInfo.estimatedWaitTime,
     })
 
-    // axios({
-    //   url: 'https://formspree.io/f/YOUR_FORM_ID',
-    //   method: 'post',
-    //   headers: {
-    //     'Accept': 'application/json'
-    //   },
-    //   data: {
-    //     email: studentInfo.email,
-    //     message: `Hello!\n It's your time to go the counter ${}`
-    //   }
-    // }).then((response) => { console.log(response); })
+    axios({
+      url: 'https://formspree.io/f/xqaqddbq',
+      method: 'post',
+      headers: {
+        'Accept': 'application/json'
+      },
+      data: {
+        email: studentInfo.email,
+        message: `Hello!\n It's your time to go the counter ${TELLER_DESK_NUM}`
+      }
+    }).then((response) => { console.log(response); })
 
     console.log(`Successfully called student ${studentId}`)
   } catch (error) {
@@ -158,12 +167,10 @@ const callStudent = async (studentId) => {
 
 // Lifecycle hooks
 onMounted(() => {
-  setupWebSocket()
+  connectSse()
 })
 
-onUnmounted(() => {
-  if (socket.value && socket.value.readyState === WebSocket.OPEN) {
-    socket.value.close()
-  }
-})
+onBeforeUnmount(() => {
+  if (eventSource) eventSource.close();
+});
 </script>

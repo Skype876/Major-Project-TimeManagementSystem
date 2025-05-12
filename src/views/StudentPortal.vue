@@ -120,7 +120,7 @@
           </div>
         </div>
 
-        <div v-else-if="queueData.tellerDesk"
+        <!-- <div v-else-if="queueData.tellerDesk"
           class="rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-md">
           <div class="flex flex-col space-y-1.5 p-6">
             <h3 class="text-2xl font-semibold leading-none tracking-tight">Service Completed</h3>
@@ -136,7 +136,7 @@
                 <div class="flex justify-center py-4">
                   <div class="flex gap-2">
                     <button v-for="star in 5" :key="star" type="button"
-                      class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10 rounded-full">
+                      class="inline-flex items-center justify-center whitespace-nowrap  text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10 rounded-full">
                       {{ star }}
                     </button>
                   </div>
@@ -156,11 +156,11 @@
               </button>
             </form>
           </div>
-        </div>
+        </div> -->
 
         <div v-else class="space-y-6 w-full max-w-md">
           <QueueStatus :position="queueData.position" :estimatedTime="queueData.estimatedTime"
-            :ticketNumber="queueData.ticketNumber" />
+            :ticketNumber="queueData.ticketNumber" :tellerDesk="queueData.tellerDesk"/>
 
           <div class="w-full">
             <div class="flex flex-col space-y-2">
@@ -280,7 +280,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import { ArrowLeft } from 'lucide-vue-next'
 import QueueStatus from '@/views/QueueStatus.vue'
 import { authApi } from '@/services/api'
@@ -288,8 +288,8 @@ import { authApi } from '@/services/api'
 // Reactive state
 const isInQueue = ref(false)
 const activeTab = ref('status')
-const websocket = ref(null)
-
+let eventSource = null;
+const reconnectInterval = 5000
 // Form data with default values
 const formData = ref({
   name: '',
@@ -320,51 +320,55 @@ const queueData = ref({
 const minutes = computed(() => Math.floor(queueData.value.estimatedTime / 60000))
 
 // Constants
-const WEBSOCKET_URL = 'wss://student-queue-f9fmhac6gcgpf4dd.canadacentral-01.azurewebsites.net/queue/updates'
 const SESSION_KEY = 'session'
 
+const connectSse = (id) => {
+  eventSource = new EventSource(`http://student-queue-f9fmhac6gcgpf4dd.canadacentral-01.azurewebsites.net/updates/${id}`);
+  // eventSource = new EventSource(`http://localhost:8080/updates/${id}`);
+
+  eventSource.onmessage = (event) => {
+    let data = JSON.parse(event.data)
+    console.log('Received message:', "status" in data);
+    data = "data" in data? JSON.parse(data.data) : data
+    if (data.status !== undefined || data.status!=="connected" ) {
+      // const processedData = Array.isArray(data) ? data : [data]
+      updateQueueData(data)
+    }
+
+  };
+
+  eventSource.onerror = () => {
+    console.error("Error in SSE connection");
+    eventSource.close();
+    reconnectSSE();
+  };
+};
+
+const reconnectSSE = () => {
+  console.log(`Reconnecting in ${reconnectInterval / 1000} seconds...`);
+  setTimeout(() => {
+    connectSse();
+  }, reconnectInterval);
+};
+
 // Methods
-const initializeWebSocket = (id, token) => {
-  try {
-    websocket.value = new WebSocket(`${WEBSOCKET_URL}/${id}?token=${token}`)
 
-    websocket.value.onopen = () => console.log('WebSocket connection established')
-
-    console.log("hello")
-
-    websocket.value.onmessage = (event) => {
-      try {
-        const [data] = JSON.parse(event.data)
-        console.log(event.data);
-        updateQueueData(data)
-      } catch (error) {
-        console.error('Error processing WebSocket message:', error)
-      }
-    }
-
-    websocket.value.onerror = (error) => {
-      console.error('WebSocket error:', error)
-    }
-
-  } catch (error) {
-    console.error('WebSocket initialization failed:', error)
-    throw error
-  }
-}
 
 const updateQueueData = (data) => {
+  console.log(data);
+  
   queueData.value = {
-    position: data.position || data.queuePosition,
+    position: data.position,
     estimatedTime: data.estimatedWaitTime,
-    tellerDesk: data.teller || null,
-    name: data.student.name,
-    idNum: data.student.id_num,
-    typeOfIssue: data.student.typeOfIssue,
-    collegeFaculty: data.student.collegeFaculty || '',
-    studentLevel: data.student.studentLevel || '',
-    email: data.student.email || '',
-    phone: data.student.phone || '',
-    ticketNumber: data.student.ticketNumber
+    tellerDesk: data.deskNum ,
+    name: data.name,
+    idNum: data.idNum,
+    typeOfIssue: data.typeOfIssue,
+    collegeFaculty: data.collegeFaculty || '',
+    studentLevel: data.studentLevel || '',
+    email: data.email || '',
+    phone: data.phone || '',
+    ticketNumber: data.ticketNumber
   }
   console.log(queueData.value);
   
@@ -374,7 +378,7 @@ const loadSession = () => {
   const session = JSON.parse(localStorage.getItem(SESSION_KEY))
   if (session?.id && session?.token) {
     isInQueue.value = true
-    initializeWebSocket(session.id, session.token)
+    connectSse(session.id)
   }
 }
 
@@ -454,10 +458,7 @@ const handleSubmitFeedback = async () => {
 const cleanupQueueSession = () => {
   isInQueue.value = false
   localStorage.removeItem(SESSION_KEY)
-  if (websocket.value) {
-    websocket.value.close()
-    websocket.value = null
-  }
+  if (eventSource) eventSource.close();
 }
 
 // Lifecycle hooks
@@ -465,9 +466,7 @@ onMounted(() => {
   loadSession()
 })
 
-onUnmounted(() => {
-  if (websocket.value) {
-    websocket.value.close()
-  }
-})
+onBeforeUnmount(() => {
+  if (eventSource) eventSource.close();
+});
 </script>

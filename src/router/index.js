@@ -25,13 +25,13 @@ const routes = [
     path: '/teller',
     name: 'TellerDashboard',
     component: TellerDashboard,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ['customer service rep','SUPER_ADMIN'] },
   },
   {
     path: '/admin',
     name: 'AdminDashboard',
     component: AdminDashboard,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ['admin', 'SUPER_ADMIN'] },
   },
 ]
 
@@ -41,12 +41,29 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from) => {
+  const token = localStorage.getItem('token')
+  const user = localStorage.getItem('user')
+
   if (to.meta.requiresAuth) {
-    const token = localStorage.getItem('token')
     if (!token) {
       return { path: '/login' }
     }
+
+    if (to.meta.roles && (!user || !to.meta.roles.includes(user))) {
+      return { path: '/login' }
+    }
+
+    // Handle role-specific redirection only when navigating to non-role specific routes
+    if (to.path !== '/teller' && to.path !== '/admin') {
+      if (user === 'customer service rep' || user === 'SUPER_ADMIN') {
+        return { path: '/teller' }
+      }
+      if (user !== 'customer service rep' || user === 'SUPER_ADMIN') {
+        return { path: '/admin' }
+      }
+    }
   }
 })
+
 
 export default router

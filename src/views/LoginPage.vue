@@ -174,9 +174,11 @@ async function login(role) {
         localStorage.setItem('email', data.email)
         localStorage.setItem('desk_num', data.desk_num)
         // Redirect based on role
-        if (data.role === 'teller' || data.role == "SUPER_ADMIN") {
+        if (data.role === 'customer service rep') {
+            localStorage.setItem('user', data.role)
             router.push('/teller')
         } else if (data.role === 'admin' || data.role == "SUPER_ADMIN") {
+            localStorage.setItem('user', data.role)
             router.push('/admin')
         }
     } catch (error) {

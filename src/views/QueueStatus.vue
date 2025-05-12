@@ -9,7 +9,7 @@
             {{ props.position || '--' }}
           </div>
         </div>
-        <p class="mt-4 text-sm">Your position in line</p>
+        <p class="mt-4 text-sm">{{ props.tellerDesk ? "It's your turn to be served" : "Your position in line" }}</p>
       </div>
     </div>
     <div class="p-6">

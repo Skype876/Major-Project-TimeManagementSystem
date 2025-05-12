@@ -285,7 +285,7 @@ const handleRemoveService = async () => {
 
 const logout = async () => {
   try {
-    await authApi.post("/logout")
+    await api.post("/logout")
     localStorage.removeItem('token')
     localStorage.removeItem('email')
     localStorage.removeItem('user')

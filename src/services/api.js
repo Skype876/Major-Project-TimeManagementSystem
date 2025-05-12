@@ -3,6 +3,7 @@ import axios from 'axios'
 const createApiInstance = () => {
   const instance = axios.create({
     baseURL: 'https://student-queue-f9fmhac6gcgpf4dd.canadacentral-01.azurewebsites.net/',
+    // baseURL: ' http://127.0.0.1:8080',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -25,6 +26,7 @@ const api = createApiInstance()
 
 const authApi = axios.create({
   baseURL: 'https://student-queue-f9fmhac6gcgpf4dd.canadacentral-01.azurewebsites.net/',
+  // baseURL: ' http://127.0.0.1:8080',
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',

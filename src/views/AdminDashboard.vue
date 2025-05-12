@@ -50,7 +50,7 @@
             <button @click="isUserMenuOpen = !isUserMenuOpen"
               class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#d0c72f] text-white h-9 px-4 py-2 flex items-center gap-2 mr-2">
               <User class="h-4 w-4" />
-              <span>Teller Name</span>
+              <span>Admin Name</span>
             </button>
             <div v-if="isUserMenuOpen"
               class="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-popover text-popover-foreground z-50">
@@ -851,7 +851,7 @@ const reportTypeDescription = computed(() => {
 
 const logout = async () => {
   try {
-    await authApi.post("/logout")
+    await api.post("/logout")
     localStorage.removeItem('token')
     localStorage.removeItem('email')
     localStorage.removeItem('user')
