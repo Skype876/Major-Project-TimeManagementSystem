@@ -323,7 +323,7 @@ const minutes = computed(() => Math.floor(queueData.value.estimatedTime / 60000)
 const SESSION_KEY = 'session'
 
 const connectSse = (id) => {
-  eventSource = new EventSource(`http://student-queue-f9fmhac6gcgpf4dd.canadacentral-01.azurewebsites.net/updates/${id}`);
+  eventSource = new EventSource(`https://student-queue-f9fmhac6gcgpf4dd.canadacentral-01.azurewebsites.net/updates/${id}`);
   // eventSource = new EventSource(`http://localhost:8080/updates/${id}`);
 
   eventSource.onmessage = (event) => {

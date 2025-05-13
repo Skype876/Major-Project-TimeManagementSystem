@@ -72,7 +72,7 @@ const TELLER_DESK_NUM = parseInt(localStorage.getItem("desk_num") ?? "0", 10);
 
 const connectSse = () => {
   console.log("Connecting to SSE...");
-  eventSource = new EventSource(`http://student-queue-f9fmhac6gcgpf4dd.canadacentral-01.azurewebsites.net/updates`);
+  eventSource = new EventSource(`https://student-queue-f9fmhac6gcgpf4dd.canadacentral-01.azurewebsites.net/updates`);
   // eventSource = new EventSource(`http://localhost:8080/updates`);
 
   eventSource.onmessage = (event) => {
