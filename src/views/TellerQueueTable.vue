@@ -38,9 +38,10 @@
             </td>
           </tr>
         </tbody>
+
       </table>
     </div>
-    <div v-if="selectedStudent" class="mt-4 p-4 border rounded bg-gray-50">
+    <!-- <div v-if="selectedStudent" class="mt-4 p-4 border rounded bg-gray-50">
       <h2 class="text-lg font-semibold mb-2">Selected Student Information</h2>
       <p><strong>Name:</strong> {{ selectedStudent.name }}</p>
       <p><strong>ID:</strong> {{ selectedStudent.id }}</p>
@@ -50,7 +51,7 @@
       <p><strong>Email:</strong> {{ selectedStudent.email || 'N/A' }}</p>
       <p><strong>Phone:</strong> {{ selectedStudent.phone || 'N/A' }}</p>
       <p><strong>Estimated Wait Time:</strong> {{ selectedStudent.estimatedWaitTime }} min</p>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -104,19 +105,21 @@ const reconnectSSE = () => {
 
 // Helper function to transform queue data
 const transformQueueData = (data) => {
-  return data.map(item => ({
-    currentWaitTime: item.currentWaitTime / 60000,
-    idNum: item.idNum,
-    name: item.name,
-    position: item.position,
-    studentId: item.studentId,
-    typeOfIssue: item.typeOfIssue,
-    estimatedWaitTime: item.estimatedWaitTime,
-    queuePosition: item.queuePosition,
-    timestamp: item.timestamp || Date.now(), // Fallback to current time if missing
-    // eventType: item.event // Keep the original event type if needed
-  }))
-}
+  return data
+    .filter(item => item.position > 0) // First filter out items with position <= 0
+    .map(item => ({
+      currentWaitTime: item.currentWaitTime / 60000, // Convert to minutes
+      idNum: item.idNum,
+      name: item.name,
+      position: item.position,
+      studentId: item.studentId,
+      typeOfIssue: item.typeOfIssue,
+      estimatedWaitTime: item.estimatedWaitTime,
+      queuePosition: item.queuePosition,
+      timestamp: item.timestamp || Date.now(), // Fallback to current time if missing
+      // eventType: item.event // Uncomment if you need to keep the original event type
+    }));
+};
 
 // Student actions
 const callStudent = async (studentId) => {
@@ -146,17 +149,17 @@ const callStudent = async (studentId) => {
       estimatedWaitTime: studentInfo.estimatedWaitTime,
     })
 
-    axios({
-      url: 'https://formspree.io/f/xqaqddbq',
-      method: 'post',
-      headers: {
-        'Accept': 'application/json'
-      },
-      data: {
-        email: studentInfo.email,
-        message: `Hello!\n It's your time to go the counter ${TELLER_DESK_NUM}`
-      }
-    }).then((response) => { console.log(response); })
+    // axios({
+    //   url: 'https://formspree.io/f/xqaqddbq',
+    //   method: 'post',
+    //   headers: {
+    //     'Accept': 'application/json'
+    //   },
+    //   data: {
+    //     email: studentInfo.email,
+    //     message: `Hello!\n It's your time to go the counter ${TELLER_DESK_NUM}`
+    //   }
+    // }).then((response) => { console.log(response); })
 
     console.log(`Successfully called student ${studentId}`)
   } catch (error) {

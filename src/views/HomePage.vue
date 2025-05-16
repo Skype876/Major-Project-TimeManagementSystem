@@ -138,7 +138,6 @@ import { Clock, ArrowRight, Users, Headset, LineChart, Menu } from 'lucide-vue-n
 const isMenuOpen = ref(false)
 
 const images = [
-  "https://loopnewslive.blob.core.windows.net/liveimage/sites/default/files/2020-05/7lBJ4E2Cnr.jpg",
   "https://i.ytimg.com/vi/Ih6hPJcYFdE/maxresdefault.jpg",
   "https://pbs.twimg.com/media/ErzPzrgXMAkzNDw.jpg"
 ]

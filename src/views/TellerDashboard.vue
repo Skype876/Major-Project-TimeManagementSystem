@@ -251,8 +251,8 @@ const handleServiceAction = async (action, errorMessage) => {
       throw new Error(errorMessage)
     }
 
-    resetCurrentStudent()
-    localStorage.removeItem("session")
+    // resetCurrentStudent()
+    // localStorage.removeItem("session")
     return true
   } catch (error) {
     console.error(`Error during ${action}:`, error)
@@ -279,6 +279,7 @@ const handleRemoveService = async () => {
   )
 
   if (success) {
+    resetCurrentStudent()
     console.log('Student removed successfully')
   }
 }

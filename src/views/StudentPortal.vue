@@ -120,15 +120,28 @@
           </div>
         </div>
 
-        <!-- <div v-else-if="queueData.tellerDesk"
+        <div v-else-if="queueData.status != 'waiting' && queueData.status != 'in progress'"
           class="rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-md">
-          <div class="flex flex-col space-y-1.5 p-6">
+          <div v-if="queueData.status =='completed'" class="flex flex-col space-y-1.5 p-6">
             <h3 class="text-2xl font-semibold leading-none tracking-tight">Service Completed</h3>
-            <p class="text-sm text-muted-foreground">
-              Please rate your experience with our service.
+            <p class="text-lg text-muted-foreground">
+              Thank you for your time and patience
             </p>
           </div>
-          <div class="p-6">
+          <div v-if="queueData.status == 'exited'" class="flex flex-col space-y-1.5 p-6">
+            <h3 class="text-2xl font-semibold leading-none tracking-tight">Queue Exited</h3>
+            <p class="text-lg text-muted-foreground">
+              You Exited the Queue.
+            </p>
+          </div>
+          <div v-if="queueData.status == 'removed'" class="flex flex-col space-y-1.5 p-6">
+            <h3 class="text-2xl font-semibold leading-none tracking-tight">Removed</h3>
+            <p class="text-lg text-muted-foreground">
+              You have been removed from the Queue.
+            </p>
+          </div>
+        </div>
+        <!-- <div class="p-6">
             <form @submit.prevent="handleSubmitFeedback" class="space-y-4">
               <div class="space-y-2">
                 <label for="rating"
@@ -155,12 +168,12 @@
                 Submit Feedback
               </button>
             </form>
-          </div>
-        </div> -->
+          </div>-->
 
-        <div v-else class="space-y-6 w-full max-w-md">
+        <div v-if="queueData.status == 'waiting' || queueData.status == 'in progress'"
+          class="space-y-6 w-full max-w-md">
           <QueueStatus :position="queueData.position" :estimatedTime="queueData.estimatedTime"
-            :ticketNumber="queueData.ticketNumber" :tellerDesk="queueData.tellerDesk"/>
+            :ticketNumber="queueData.ticketNumber" :tellerDesk="queueData.tellerDesk" />
 
           <div class="w-full">
             <div class="flex flex-col space-y-2">
@@ -313,7 +326,8 @@ const queueData = ref({
   studentLevel: '',
   email: '',
   phone: '',
-  ticketNumber: ''
+  ticketNumber: '',
+  status: '',
 })
 
 // Computed properties
@@ -356,11 +370,11 @@ const reconnectSSE = () => {
 
 const updateQueueData = (data) => {
   console.log(data);
-  
+
   queueData.value = {
     position: data.position,
     estimatedTime: data.estimatedWaitTime,
-    tellerDesk: data.deskNum ,
+    tellerDesk: data.deskNum,
     name: data.name,
     idNum: data.idNum,
     typeOfIssue: data.typeOfIssue,
@@ -368,14 +382,24 @@ const updateQueueData = (data) => {
     studentLevel: data.studentLevel || '',
     email: data.email || '',
     phone: data.phone || '',
-    ticketNumber: data.ticketNumber
+    ticketNumber: data.ticketNumber,
+    status: data.status,
+  };
+
+  if (queueData.value.status !== 'waiting' && queueData.value.status !== 'in progress' && queueData.value.status !== 'connected') {
+    console.log("Clearing session due to status:", queueData.value.status);
+    cleanupQueueSession();
+  } else {
+    isInQueue.value = true
+    console.log("Session remains active with status:", queueData.value.status);
   }
-  console.log(queueData.value);
-  
-}
+};
+
 
 const loadSession = () => {
   const session = JSON.parse(localStorage.getItem(SESSION_KEY))
+  console.log(session);
+  
   if (session?.id && session?.token) {
     isInQueue.value = true
     connectSse(session.id)
@@ -385,6 +409,7 @@ const loadSession = () => {
 const handleJoinQueue = async () => {
   try {
     const { data } = await authApi.post('/students', formData.value)
+    console.log("hi",data.student);
 
     if (!data) throw new Error('No data received from server')
 
@@ -412,6 +437,8 @@ const handleJoinQueue = async () => {
       token: data.token
     }))
 
+
+    loadSession()
   } catch (error) {
     console.error('Queue join error:', error)
     alert(`Failed to join queue: ${error.message || 'Please try again.'}`)
@@ -425,7 +452,7 @@ const handleExitQueue = async () => {
 
     await authApi.put(`/students/${session.id}/exit`)
 
-    cleanupQueueSession()
+    // cleanupQueueSession()
 
   } catch (error) {
     console.error('Queue exit error:', error)
@@ -457,6 +484,15 @@ const handleSubmitFeedback = async () => {
 
 const cleanupQueueSession = () => {
   isInQueue.value = false
+  formData.value = {
+    name: '',
+      id_num: '',
+        collegeFaculty: '',
+          studentLevel: '',
+            phone: '',
+              email: '',
+                typeOfIssue: ''
+  }
   localStorage.removeItem(SESSION_KEY)
   if (eventSource) eventSource.close();
 }
