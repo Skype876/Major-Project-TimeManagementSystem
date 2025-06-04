@@ -353,6 +353,43 @@
                     <Bar :data="studentLevelsChartData" :options="studentLevelsChartOptions" />
                   </div>
                 </div>
+
+                <!-- Added Detailed Students section -->
+                <div class="rounded-lg border bg-card text-card-foreground shadow-sm mt-6">
+                  <div class="flex flex-col space-y-1.5 p-6">
+                    <h3 class="text-lg font-semibold leading-none tracking-tight">Detailed Students</h3>
+                    <table class="w-full text-sm border border-gray-300 rounded">
+                      <thead>
+                        <tr class="bg-gray-100">
+                          <th class="border border-gray-300 p-2 text-left">Name</th>
+                          <th class="border border-gray-300 p-2 text-left">ID Number</th>
+                          <th class="border border-gray-300 p-2 text-left">College/Faculty</th>
+                          <th class="border border-gray-300 p-2 text-left">Student Level</th>
+                          <th class="border border-gray-300 p-2 text-left">Phone</th>
+                          <th class="border border-gray-300 p-2 text-left">Email</th>
+                          <th class="border border-gray-300 p-2 text-left">Type of Issue</th>
+                          <th class="border border-gray-300 p-2 text-left">Status</th>
+                          <th class="border border-gray-300 p-2 text-left">Arrival Time</th>
+                          <th class="border border-gray-300 p-2 text-left">Attended By</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="student in sortedDetailedStudents" :key="student.id_num">
+                          <td class="border border-gray-300 p-2">{{ student.name }}</td>
+                          <td class="border border-gray-300 p-2">{{ student.id_num }}</td>
+                          <td class="border border-gray-300 p-2">{{ student.collegeFaculty }}</td>
+                          <td class="border border-gray-300 p-2">{{ student.studentLevel }}</td>
+                          <td class="border border-gray-300 p-2">{{ student.phone }}</td>
+                          <td class="border border-gray-300 p-2">{{ student.email }}</td>
+                          <td class="border border-gray-300 p-2">{{ student.typeOfIssue }}</td>
+                          <td class="border border-gray-300 p-2">{{ student.status }}</td>
+                          <td class="border border-gray-300 p-2">{{ formatDateTime(student.arrivalTime) }}</td>
+                          <td class="border border-gray-300 p-2">{{ student.attendedUser?.username || 'N/A' }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -860,5 +897,22 @@ const logout = async () => {
     console.error('Logout failed:', error)
     // Consider adding user-facing error notification here
   }
+}
+
+import { computed } from 'vue'
+
+const sortedDetailedStudents = computed(() => {
+  if (!reportData.value || !Array.isArray(reportData.value.detailedStudents)) {
+    return []
+  }
+  return [...reportData.value.detailedStudents].sort((a, b) => {
+    return new Date(a.arrivalTime) - new Date(b.arrivalTime)
+  })
+})
+
+function formatDateTime(dateTimeStr) {
+  if (!dateTimeStr) return ''
+  const date = new Date(dateTimeStr)
+  return date.toLocaleString()
 }
 </script>
