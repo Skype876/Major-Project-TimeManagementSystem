@@ -119,6 +119,83 @@ const form = ref({
   password: '',
   user_type: 'teller',
 })
+
+// Reactive error messages for form validation
+const formErrors = ref({
+  user_id: '',
+  username: '',
+  f_name: '',
+  l_name: '',
+  phone: '',
+  email: '',
+  desk_num: '',
+  password: ''
+})
+
+// Validation functions
+const validateName = (name) => {
+  if (!name) return 'Name is required.'
+  if (/\d/.test(name)) return 'Name cannot contain numbers.'
+  return ''
+}
+
+const validateIdNum = (id) => {
+  if (!id) return 'ID is required.'
+  if (!/^\d{7}$/.test(id.toString())) return 'ID must be exactly 7 digits.'
+  return ''
+}
+
+const validateEmail = (email) => {
+  if (!email) return 'Email is required.'
+  const emailRegex = /^[\w-.]+@[\w-]+\.[a-z]{2,}$/i
+  if (!emailRegex.test(email)) return 'Email must be a valid email address.'
+  return ''
+}
+
+const validatePhone = (phone) => {
+  if (!phone) return 'Phone number is required.'
+  const phoneRegex = /^\+?\d{1,4}?[-.\s]?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/
+  if (!phoneRegex.test(phone)) return 'Phone number must include area code and 7 digits.'
+  return ''
+}
+
+const validateDeskNum = (desk) => {
+  if (!desk) return 'Desk selection is required.'
+  return ''
+}
+
+const validatePassword = (password) => {
+  if (!password) return 'Password is required.'
+  if (password.length < 8) return 'Password must be at least 8 characters.'
+  if (!/[A-Z]/.test(password)) return 'Password must contain at least one capital letter.'
+  if (!/\d/.test(password)) return 'Password must contain at least one number.'
+  return ''
+}
+
+const validateForm = () => {
+  formErrors.value.user_id = validateIdNum(form.value.user_id)
+  formErrors.value.username = form.value.username ? '' : 'Username is required.'
+  formErrors.value.f_name = validateName(form.value.f_name)
+  formErrors.value.l_name = validateName(form.value.l_name)
+  formErrors.value.phone = validatePhone(form.value.phone)
+  formErrors.value.email = validateEmail(form.value.email)
+  formErrors.value.desk_num = validateDeskNum(form.value.desk_num)
+  formErrors.value.password = validatePassword(form.value.password)
+
+  return Object.values(formErrors.value).every(error => error === '')
+}
+
+// Modify handleSubmit to validate before submitting
+const originalHandleSubmit = handleSubmit
+handleSubmit = (e) => {
+  e.preventDefault()
+  if (!validateForm()) {
+    return
+  }
+  // Clear errors before submission
+  Object.keys(formErrors.value).forEach(key => formErrors.value[key] = '')
+  originalHandleSubmit(e)
+}
 // console.log(form.value)
 const props = defineProps({
   open: {

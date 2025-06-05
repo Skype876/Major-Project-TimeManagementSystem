@@ -38,23 +38,25 @@
             </p>
           </div>
           <div class="p-6">
-            <form @submit.prevent="handleJoinQueue" class="space-y-4">
-              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div class="space-y-2">
-                  <label for="name"
-                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Full
-                    Name</label>
-                  <input id="name" placeholder="John Doe" v-model="formData.name" required
-                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
-                </div>
-                <div class="space-y-2">
-                  <label for="student-id"
-                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Student
-                    ID</label>
-                  <input id="student-id" placeholder="S12345678" required v-model="formData.id_num"
-                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
-                </div>
-              </div>
+<form @submit.prevent="handleJoinQueue" class="space-y-4">
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div class="space-y-2">
+      <label for="name"
+        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Full
+        Name</label>
+      <input id="name" placeholder="John Doe" v-model="formData.name" required
+        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+      <p v-if="formErrors.name" class="text-red-600 text-sm mt-1">{{ formErrors.name }}</p>
+    </div>
+    <div class="space-y-2">
+      <label for="student-id"
+        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Student
+        ID</label>
+      <input id="student-id" placeholder="S12345678" required v-model="formData.id_num"
+        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+      <p v-if="formErrors.id_num" class="text-red-600 text-sm mt-1">{{ formErrors.id_num }}</p>
+    </div>
+  </div>
               <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div class="space-y-2">
                   <label for="faculty"
@@ -98,20 +100,22 @@
                   </select>
                 </div>
               </div>
-              <div class="space-y-2">
-                <label for="email"
-                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Email
-                  Address</label>
-                <input id="email" type="email" placeholder="john.doe@example.com" required v-model="formData.email"
-                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
-              </div>
-              <div class="space-y-2">
-                <label for="phone"
-                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Phone
-                  Number (for notifications)</label>
-                <input id="phone" type="tel" v-model="formData.phone" placeholder="+1 (555) 123-4567"
-                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
-              </div>
+<div class="space-y-2">
+  <label for="email"
+    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Email
+    Address</label>
+  <input id="email" type="email" placeholder="john.doe@example.com" required v-model="formData.email"
+    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+  <p v-if="formErrors.email" class="text-red-600 text-sm mt-1">{{ formErrors.email }}</p>
+</div>
+<div class="space-y-2">
+  <label for="phone"
+    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Phone
+    Number (for notifications)</label>
+  <input id="phone" type="tel" v-model="formData.phone" placeholder="+1 (555) 123-4567"
+    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+  <p v-if="formErrors.phone" class="text-red-600 text-sm mt-1">{{ formErrors.phone }}</p>
+</div>
               <button type="submit"
                 class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2 w-full">
                 Join Queue
@@ -313,6 +317,76 @@ const formData = ref({
   email: '',
   typeOfIssue: ''
 })
+
+// Reactive error messages for form validation
+const formErrors = ref({
+  name: '',
+  id_num: '',
+  collegeFaculty: '',
+  studentLevel: '',
+  phone: '',
+  email: '',
+  typeOfIssue: ''
+})
+
+// Validation functions
+const validateName = (name) => {
+  if (!name) return 'Name is required.'
+  if (/\d/.test(name)) return 'Name cannot contain numbers.'
+  return ''
+}
+
+const validateIdNum = (id) => {
+  if (!id) return 'Student ID is required.'
+  if (!/^\d{7}$/.test(id)) return 'Student ID must be exactly 7 digits.'
+  return ''
+}
+
+const validateEmail = (email) => {
+  if (!email) return 'Email is required.'
+  // Simple email regex
+  const emailRegex = /^[\\w-.]+@[\\w-]+\\.[a-z]{2,}$/i
+  if (!emailRegex.test(email)) return 'Email must be a valid email address.'
+  return ''
+}
+
+const validatePhone = (phone) => {
+  if (!phone) return 'Phone number is required.'
+  // Phone regex: area code + 7 digits, allowing common formats
+  const phoneRegex = /^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}$/
+  if (!phoneRegex.test(phone)) return 'Phone number must include area code and 7 digits.'
+  return ''
+}
+
+
+const validateRequired = (value, fieldName) => {
+  if (!value) return `${fieldName} is required.`
+  return ''
+}
+
+const validateForm = () => {
+  formErrors.value.name = validateName(formData.value.name)
+  formErrors.value.id_num = validateIdNum(formData.value.id_num)
+  formErrors.value.email = validateEmail(formData.value.email)
+  formErrors.value.phone = validatePhone(formData.value.phone)
+  formErrors.value.collegeFaculty = validateRequired(formData.value.collegeFaculty, 'Faculty')
+  formErrors.value.studentLevel = validateRequired(formData.value.studentLevel, 'Student Level')
+  formErrors.value.typeOfIssue = validateRequired(formData.value.typeOfIssue, 'Issue Type')
+
+  // Return true if no errors
+  return Object.values(formErrors.value).every(error => error === '')
+}
+
+// Modify handleJoinQueue to validate before submitting
+const originalHandleJoinQueue = handleJoinQueue
+handleJoinQueue = async () => {
+  if (!validateForm()) {
+    return
+  }
+  // Clear errors before submission
+  Object.keys(formErrors.value).forEach(key => formErrors.value[key] = '')
+  await originalHandleJoinQueue()
+}
 
 // Queue data with type safety through default values
 const queueData = ref({
